@@ -36,9 +36,9 @@ under the License.
     <description>Automatic generation of tags.</description>
     <url>http://tiles.apache.org/tiles-autotag/</url>
     <scm>
-        <connection>scm:svn:http://svn.eu.apache.org/repos/asf/tiles/framework/trunk/tiles-autotag/</connection>
-        <developerConnection>scm:svn:https://svn.eu.apache.org/repos/asf/tiles/framework/trunk/tiles-autotag/</developerConnection>
-        <url>http://svn.eu.apache.org/viewvc/tiles/framework/trunk/tiles-autotag/</url>
+        <connection>scm:svn:http://svn.apache.org/repos/asf/tiles/autotag/trunk/</connection>
+        <developerConnection>scm:svn:https://svn.apache.org/repos/asf/tiles/autotag/trunk/</developerConnection>
+        <url>http://svn.apache.org/viewvc/tiles/autotag/trunk/</url>
     </scm>
     <issueManagement>
         <system>JIRA</system>
