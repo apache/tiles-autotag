@@ -29,15 +29,15 @@ under the License.
     </parent>
     <groupId>org.apache.tiles</groupId>
     <artifactId>tiles-autotag</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Autotags</name>
     <description>Automatic generation of tags.</description>
     <url>http://tiles.apache.org/tiles-autotag/</url>
     <scm>
-        <connection>scm:svn:http://svn.apache.org/repos/asf/tiles/autotag/tags/tiles-autotag-1.0.0</connection>
-        <developerConnection>scm:svn:https://svn.apache.org/repos/asf/tiles/autotag/tags/tiles-autotag-1.0.0</developerConnection>
-        <url>http://svn.apache.org/viewvc/tiles/autotag/tags/tiles-autotag-1.0.0</url>
+        <connection>scm:svn:http://svn.apache.org/repos/asf/tiles/autotag/branches/AUTOTAG_1_0_X</connection>
+        <developerConnection>scm:svn:https://svn.apache.org/repos/asf/tiles/autotag/branches/AUTOTAG_1_0_X</developerConnection>
+        <url>http://svn.apache.org/viewvc/tiles/autotag/branches/AUTOTAG_1_0_X</url>
     </scm>
     <issueManagement>
         <system>JIRA</system>

@@ -24,11 +24,11 @@ under the License.
   <parent>
     <artifactId>tiles-autotag</artifactId>
     <groupId>org.apache.tiles</groupId>
-    <version>1.0.0</version>
+    <version>1.0.1-SNAPSHOT</version>
   </parent>
   <groupId>org.apache.tiles</groupId>
   <artifactId>tiles-autotag-freemarker</artifactId>
-  <version>1.0.0</version>
+  <version>1.0.1-SNAPSHOT</version>
   <name>Autotag - Freemarker support</name>
   <description>Generates code for Freemarker support.</description>
   <dependencies>
