@@ -24,11 +24,11 @@ under the License.
   <parent>
     <artifactId>tiles-autotag</artifactId>
     <groupId>org.apache.tiles</groupId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.0</version>
   </parent>
   <groupId>org.apache.tiles</groupId>
   <artifactId>tiles-autotag-jsp</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <version>1.0.0</version>
   <name>Tiles Autotag - JSP tags automatic generation</name>
   <description>Generates JSP tags automatically from templates.</description>
   <dependencies>
