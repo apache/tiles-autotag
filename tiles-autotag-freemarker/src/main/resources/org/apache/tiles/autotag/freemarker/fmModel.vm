@@ -29,7 +29,6 @@ import java.util.Map;
 import org.apache.tiles.autotag.core.runtime.ModelBody;
 #end
 import org.apache.tiles.autotag.core.runtime.AutotagRuntime;
-import org.apache.tiles.request.Request;
 
 import freemarker.core.Environment;
 import freemarker.template.TemplateDirectiveBody;
@@ -64,17 +63,17 @@ public class ${clazz.tagClassPrefix}FMModel implements TemplateDirectiveModel {
     @Override
     public void execute(Environment env, @SuppressWarnings("rawtypes") Map params, TemplateModel[] loopVars,
             TemplateDirectiveBody body) throws TemplateException, IOException {
-        AutotagRuntime runtime = new ${runtimeClass}();
+        AutotagRuntime<${requestClass}> runtime = new ${runtimeClass}();
         if (runtime instanceof TemplateDirectiveModel) {
             ((TemplateDirectiveModel) runtime).execute(env, params, loopVars, body);
         }
-        Request request = runtime.createRequest();
+        ${requestClass} request = runtime.createRequest();
 #if(${clazz.hasBody()})
         ModelBody modelBody = runtime.createModelBody();
 #end
         model.execute(
 #foreach($parameter in ${clazz.parameters})
-            ($stringTool.getClassToCast(${parameter.type})) runtime.getParameter("${parameter.exportedName}", $stringTool.getDefaultValue(${parameter.type}, ${parameter.defaultValue})),
+            runtime.getParameter("${parameter.exportedName}", ${stringTool.getClassToCast(${parameter.type})}.class, $stringTool.getDefaultValue(${parameter.type}, ${parameter.defaultValue})),
 #end
                 request#if(${clazz.hasBody()}), modelBody#end
 

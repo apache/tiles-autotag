@@ -100,17 +100,18 @@ public class AbstractTemplateClassGeneratorTest {
         Map<String, String> parameters = createMock(Map.class);
         String packageName = "org.apache.tiles.autotag.test";
         String runtimeClass = "org.apache.tiles.autotag.test.DoStuffRuntime";
+        String requestClass = "org.apache.tiles.autotag.test.DoStuffRequest";
 
-        expect(generator.getDirectoryName(directory, packageName, suite, clazz, parameters, runtimeClass)).andReturn("mydir");
+        expect(generator.getDirectoryName(directory, packageName, suite, clazz, parameters, runtimeClass, requestClass)).andReturn("mydir");
         File mydir = new File(directory, "mydir");
-        expect(generator.getFilename(mydir , packageName, suite, clazz, parameters, runtimeClass)).andReturn("myfile.txt");
+        expect(generator.getFilename(mydir , packageName, suite, clazz, parameters, runtimeClass, requestClass)).andReturn("myfile.txt");
         String sampleVmPath = "/sample.vm";
-        expect(generator.getTemplatePath(mydir, packageName, suite, clazz, parameters, runtimeClass)).andReturn(sampleVmPath);
+        expect(generator.getTemplatePath(mydir, packageName, suite, clazz, parameters, runtimeClass, requestClass)).andReturn(sampleVmPath);
         expect(velocityEngine.getTemplate("/sample.vm")).andReturn(template);
         template.merge(isA(VelocityContext.class), isA(FileWriter.class));
 
         replay(velocityEngine, generator, suite, clazz, template, parameters);
-        generator.generate(directory, packageName, suite, clazz, parameters, runtimeClass);
+        generator.generate(directory, packageName, suite, clazz, parameters, runtimeClass, requestClass);
         verify(velocityEngine, generator, suite, clazz, template, parameters);
     }
 
@@ -129,16 +130,17 @@ public class AbstractTemplateClassGeneratorTest {
         Map<String, String> parameters = createMock(Map.class);
         String packageName = "org.apache.tiles.autotag.test";
         String runtimeClass = "org.apache.tiles.autotag.test.DoStuffRuntime";
+        String requestClass = "org.apache.tiles.autotag.test.DoStuffRequest";
 
-        expect(generator.getDirectoryName(directory, packageName, suite, clazz, parameters, runtimeClass)).andReturn("mydir");
+        expect(generator.getDirectoryName(directory, packageName, suite, clazz, parameters, runtimeClass, requestClass)).andReturn("mydir");
         File mydir = new File(directory, "mydir");
-        expect(generator.getFilename(mydir , packageName, suite, clazz, parameters, runtimeClass)).andReturn("myfile.txt");
+        expect(generator.getFilename(mydir , packageName, suite, clazz, parameters, runtimeClass, requestClass)).andReturn("myfile.txt");
         String sampleVmPath = "/sample.vm";
-        expect(generator.getTemplatePath(mydir, packageName, suite, clazz, parameters, runtimeClass)).andReturn(sampleVmPath);
+        expect(generator.getTemplatePath(mydir, packageName, suite, clazz, parameters, runtimeClass, requestClass)).andReturn(sampleVmPath);
         expect(velocityEngine.getTemplate("/sample.vm")).andThrow(new ResourceNotFoundException("hello"));
 
         replay(velocityEngine, generator, suite, clazz, template, parameters);
-        generator.generate(directory, packageName, suite, clazz, parameters, runtimeClass);
+        generator.generate(directory, packageName, suite, clazz, parameters, runtimeClass, requestClass);
         verify(velocityEngine, generator, suite, clazz, template, parameters);
     }
 
@@ -157,16 +159,17 @@ public class AbstractTemplateClassGeneratorTest {
         Map<String, String> parameters = createMock(Map.class);
         String packageName = "org.apache.tiles.autotag.test";
         String runtimeClass = "org.apache.tiles.autotag.test.DoStuffRuntime";
+        String requestClass = "org.apache.tiles.autotag.test.DoStuffRequest";
 
-        expect(generator.getDirectoryName(directory, packageName, suite, clazz, parameters, runtimeClass)).andReturn("mydir");
+        expect(generator.getDirectoryName(directory, packageName, suite, clazz, parameters, runtimeClass, requestClass)).andReturn("mydir");
         File mydir = new File(directory, "mydir");
-        expect(generator.getFilename(mydir , packageName, suite, clazz, parameters, runtimeClass)).andReturn("myfile.txt");
+        expect(generator.getFilename(mydir , packageName, suite, clazz, parameters, runtimeClass, requestClass)).andReturn("myfile.txt");
         String sampleVmPath = "/sample.vm";
-        expect(generator.getTemplatePath(mydir, packageName, suite, clazz, parameters, runtimeClass)).andReturn(sampleVmPath);
+        expect(generator.getTemplatePath(mydir, packageName, suite, clazz, parameters, runtimeClass, requestClass)).andReturn(sampleVmPath);
         expect(velocityEngine.getTemplate("/sample.vm")).andThrow(new ParseErrorException("hello"));
 
         replay(velocityEngine, generator, suite, clazz, template, parameters);
-        generator.generate(directory, packageName, suite, clazz, parameters, runtimeClass);
+        generator.generate(directory, packageName, suite, clazz, parameters, runtimeClass, requestClass);
         verify(velocityEngine, generator, suite, clazz, template, parameters);
     }
 
@@ -185,16 +188,17 @@ public class AbstractTemplateClassGeneratorTest {
         Map<String, String> parameters = createMock(Map.class);
         String packageName = "org.apache.tiles.autotag.test";
         String runtimeClass = "org.apache.tiles.autotag.test.DoStuffRuntime";
+        String requestClass = "org.apache.tiles.autotag.test.DoStuffRequest";
 
-        expect(generator.getDirectoryName(directory, packageName, suite, clazz, parameters, runtimeClass)).andReturn("mydir");
+        expect(generator.getDirectoryName(directory, packageName, suite, clazz, parameters, runtimeClass, requestClass)).andReturn("mydir");
         File mydir = new File(directory, "mydir");
-        expect(generator.getFilename(mydir , packageName, suite, clazz, parameters, runtimeClass)).andReturn("myfile.txt");
+        expect(generator.getFilename(mydir , packageName, suite, clazz, parameters, runtimeClass, requestClass)).andReturn("myfile.txt");
         String sampleVmPath = "/sample.vm";
-        expect(generator.getTemplatePath(mydir, packageName, suite, clazz, parameters, runtimeClass)).andReturn(sampleVmPath);
+        expect(generator.getTemplatePath(mydir, packageName, suite, clazz, parameters, runtimeClass, requestClass)).andReturn(sampleVmPath);
         expect(velocityEngine.getTemplate("/sample.vm")).andThrow(new Exception());
 
         replay(velocityEngine, generator, suite, clazz, template, parameters);
-        generator.generate(directory, packageName, suite, clazz, parameters, runtimeClass);
+        generator.generate(directory, packageName, suite, clazz, parameters, runtimeClass, requestClass);
         verify(velocityEngine, generator, suite, clazz, template, parameters);
     }
 
@@ -215,18 +219,19 @@ public class AbstractTemplateClassGeneratorTest {
         Map<String, String> parameters = createMock(Map.class);
         String packageName = "org.apache.tiles.autotag.test";
         String runtimeClass = "org.apache.tiles.autotag.test.DoStuffRuntime";
+        String requestClass = "org.apache.tiles.autotag.test.DoStuffRequest";
 
-        expect(generator.getDirectoryName(directory, packageName, suite, clazz, parameters, runtimeClass)).andReturn("mydir");
+        expect(generator.getDirectoryName(directory, packageName, suite, clazz, parameters, runtimeClass, requestClass)).andReturn("mydir");
         File mydir = new File(directory, "mydir");
-        expect(generator.getFilename(mydir , packageName, suite, clazz, parameters, runtimeClass)).andReturn("myfile.txt");
+        expect(generator.getFilename(mydir , packageName, suite, clazz, parameters, runtimeClass, requestClass)).andReturn("myfile.txt");
         String sampleVmPath = "/sample.vm";
-        expect(generator.getTemplatePath(mydir, packageName, suite, clazz, parameters, runtimeClass)).andReturn(sampleVmPath);
+        expect(generator.getTemplatePath(mydir, packageName, suite, clazz, parameters, runtimeClass, requestClass)).andReturn(sampleVmPath);
         expect(velocityEngine.getTemplate("/sample.vm")).andReturn(template);
         template.merge(isA(VelocityContext.class), isA(FileWriter.class));
         expectLastCall().andThrow(new IOException());
 
         replay(velocityEngine, generator, suite, clazz, template, parameters);
-        generator.generate(directory, packageName, suite, clazz, parameters, runtimeClass);
+        generator.generate(directory, packageName, suite, clazz, parameters, runtimeClass, requestClass);
         verify(velocityEngine, generator, suite, clazz, template, parameters);
     }
 
@@ -247,18 +252,19 @@ public class AbstractTemplateClassGeneratorTest {
         Map<String, String> parameters = createMock(Map.class);
         String packageName = "org.apache.tiles.autotag.test";
         String runtimeClass = "org.apache.tiles.autotag.test.DoStuffRuntime";
+        String requestClass = "org.apache.tiles.autotag.test.DoStuffRequest";
 
-        expect(generator.getDirectoryName(directory, packageName, suite, clazz, parameters, runtimeClass)).andReturn("mydir");
+        expect(generator.getDirectoryName(directory, packageName, suite, clazz, parameters, runtimeClass, requestClass)).andReturn("mydir");
         File mydir = new File(directory, "mydir");
-        expect(generator.getFilename(mydir , packageName, suite, clazz, parameters, runtimeClass)).andReturn("myfile.txt");
+        expect(generator.getFilename(mydir , packageName, suite, clazz, parameters, runtimeClass, requestClass)).andReturn("myfile.txt");
         String sampleVmPath = "/sample.vm";
-        expect(generator.getTemplatePath(mydir, packageName, suite, clazz, parameters, runtimeClass)).andReturn(sampleVmPath);
+        expect(generator.getTemplatePath(mydir, packageName, suite, clazz, parameters, runtimeClass, requestClass)).andReturn(sampleVmPath);
         expect(velocityEngine.getTemplate("/sample.vm")).andReturn(template);
         template.merge(isA(VelocityContext.class), isA(FileWriter.class));
         expectLastCall().andThrow(new ClassParseException());
 
         replay(velocityEngine, generator, suite, clazz, template, parameters);
-        generator.generate(directory, packageName, suite, clazz, parameters, runtimeClass);
+        generator.generate(directory, packageName, suite, clazz, parameters, runtimeClass, requestClass);
         verify(velocityEngine, generator, suite, clazz, template, parameters);
     }
 

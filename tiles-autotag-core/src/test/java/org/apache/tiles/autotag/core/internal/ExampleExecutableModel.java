@@ -20,8 +20,6 @@
  */
 package org.apache.tiles.autotag.core.internal;
 
-import org.apache.tiles.request.Request;
-
 /**
  * Example executable template.
  *
@@ -36,7 +34,7 @@ public class ExampleExecutableModel {
      * @param two Parameter two.
      * @param request The request.
      */
-    public void execute(String one, int two, Request request) {
+    public void execute(String one, int two, ExampleRequest request) {
         // Does nothing.
     }
 }

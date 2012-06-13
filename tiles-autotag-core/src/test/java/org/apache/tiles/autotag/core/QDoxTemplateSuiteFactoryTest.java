@@ -28,13 +28,13 @@ import java.util.List;
 import org.apache.tiles.autotag.core.internal.AnnotatedExampleModel;
 import org.apache.tiles.autotag.core.internal.ExampleExecutableModel;
 import org.apache.tiles.autotag.core.internal.ExampleModel;
+import org.apache.tiles.autotag.core.internal.ExampleRequest;
 import org.apache.tiles.autotag.core.internal.NotFeasibleExampleModel;
 import org.apache.tiles.autotag.core.runtime.ModelBody;
 import org.apache.tiles.autotag.model.TemplateClass;
 import org.apache.tiles.autotag.model.TemplateMethod;
 import org.apache.tiles.autotag.model.TemplateParameter;
 import org.apache.tiles.autotag.model.TemplateSuite;
-import org.apache.tiles.request.Request;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -45,6 +45,7 @@ import org.junit.Test;
  */
 public class QDoxTemplateSuiteFactoryTest {
 
+    private static final String REQUEST_CLASS = ExampleRequest.class.getName();
     /**
      * The factory to test.
      */
@@ -63,6 +64,7 @@ public class QDoxTemplateSuiteFactoryTest {
                 getClass().getResource("/org/apache/tiles/autotag/core/internal/NotFeasibleExampleModel.java"));
         factory.setSuiteName("The suite name");
         factory.setSuiteDocumentation("This are the docs");
+        factory.setRequestClass(REQUEST_CLASS);
     }
 
     /**
@@ -97,7 +99,7 @@ public class QDoxTemplateSuiteFactoryTest {
         assertEquals("Parameter two.", parameter.getDocumentation());
         parameter = parameters.get(2);
         assertEquals("request", parameter.getName());
-        assertEquals(Request.class.getName(), parameter.getType());
+        assertEquals(REQUEST_CLASS, parameter.getType());
         assertEquals("The request.", parameter.getDocumentation());
         parameter = parameters.get(3);
         assertEquals("modelBody", parameter.getName());
@@ -140,7 +142,7 @@ public class QDoxTemplateSuiteFactoryTest {
         assertEquals("Parameter two.", parameter.getDocumentation());
         parameter = parameters.get(2);
         assertEquals("request", parameter.getName());
-        assertEquals(Request.class.getName(), parameter.getType());
+        assertEquals(REQUEST_CLASS, parameter.getType());
         assertEquals("The request.", parameter.getDocumentation());
 
         assertNull(suite.getTemplateClassByName(NotFeasibleExampleModel.class.getName()));

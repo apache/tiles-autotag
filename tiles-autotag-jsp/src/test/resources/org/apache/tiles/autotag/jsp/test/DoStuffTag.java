@@ -10,7 +10,6 @@ import javax.servlet.jsp.tagext.SimpleTagSupport;
 
 import org.apache.tiles.autotag.core.runtime.ModelBody;
 import org.apache.tiles.autotag.core.runtime.AutotagRuntime;
-import org.apache.tiles.request.Request;
 
 /**
  * Documentation of the DoStuff class.
@@ -100,7 +99,7 @@ public class DoStuffTag extends SimpleTagSupport {
     /** {@inheritDoc} */
     @Override
     public void doTag() throws JspException, IOException {
-        AutotagRuntime runtime = new org.apache.tiles.autotag.jsp.test.Runtime();
+        AutotagRuntime<org.apache.tiles.autotag.jsp.test.Request> runtime = new org.apache.tiles.autotag.jsp.test.Runtime();
         if (runtime instanceof SimpleTagSupport) {
             SimpleTagSupport tag = (SimpleTagSupport) runtime;
             tag.setJspContext(getJspContext());
@@ -108,7 +107,7 @@ public class DoStuffTag extends SimpleTagSupport {
             tag.setParent(getParent());
             tag.doTag();
         }
-        Request request = runtime.createRequest();        
+        org.apache.tiles.autotag.jsp.test.Request request = runtime.createRequest();        
         ModelBody modelBody = runtime.createModelBody();
         model.execute(
             one,

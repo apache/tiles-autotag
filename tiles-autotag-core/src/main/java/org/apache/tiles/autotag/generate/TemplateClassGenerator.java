@@ -45,5 +45,5 @@ public interface TemplateClassGenerator {
      */
     void generate(File directory, String packageName, TemplateSuite suite,
             TemplateClass clazz, Map<String, String> parameters,
-            String runtimeClass);
+            String runtimeClass, String requestClass);
 }

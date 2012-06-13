@@ -79,6 +79,13 @@ public abstract class AbstractGenerateMojo extends AbstractMojo {
     File resourcesOutputDirectory;
 
     /**
+     * Name of the request class.
+     * @parameter expression="org.apache.tiles.request.Request"
+     * @required
+     */
+    String requestClass;
+
+    /**
      * Name of the package.
      * @parameter expression="sample"
      * @required
@@ -106,7 +113,7 @@ public abstract class AbstractGenerateMojo extends AbstractMojo {
             propsStream.close();
             TemplateGenerator generator = createTemplateGeneratorFactory(
                     new VelocityEngine(props)).createTemplateGenerator();
-            generator.generate(packageName, suite, getParameters(), getRuntimeClass());
+            generator.generate(packageName, suite, getParameters(), getRuntimeClass(), requestClass);
             if (generator.isGeneratingResources()) {
                 Resource resource = new Resource();
                 resource.setDirectory(resourcesOutputDirectory.getAbsolutePath());

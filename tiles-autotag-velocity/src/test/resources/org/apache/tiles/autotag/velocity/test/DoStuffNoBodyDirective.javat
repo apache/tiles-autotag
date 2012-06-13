@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.io.Writer;
 
 import org.apache.tiles.autotag.core.runtime.AutotagRuntime;
-import org.apache.tiles.request.Request;
 import org.apache.velocity.context.InternalContextAdapter;
 import org.apache.velocity.runtime.directive.Directive;
 import org.apache.velocity.runtime.parser.node.Node;
@@ -38,15 +37,15 @@ public class DoStuffNoBodyDirective extends Directive {
     @Override
     public boolean render(InternalContextAdapter context, Writer writer, Node node)
             throws IOException {
-        AutotagRuntime runtime = new org.apache.tiles.autotag.velocity.test.Runtime();
+        AutotagRuntime<org.apache.tiles.autotag.velocity.Request> runtime = new org.apache.tiles.autotag.velocity.test.Runtime();
         if (runtime instanceof Directive) {
             ((Directive) runtime).render(context, writer, node);
         }
-        Request request = runtime.createRequest();
+        org.apache.tiles.autotag.velocity.Request request = runtime.createRequest();
         model.execute(
-            (java.lang.Double) runtime.getParameter("one", null),
-            (java.lang.Float) runtime.getParameter("two", 0.0f),
-            (java.util.Date) runtime.getParameter("three", null),
+            runtime.getParameter("one", java.lang.Double.class, null),
+            runtime.getParameter("two", java.lang.Float.class, 0.0f),
+            runtime.getParameter("three", java.util.Date.class, null),
             request
         );
         return true;

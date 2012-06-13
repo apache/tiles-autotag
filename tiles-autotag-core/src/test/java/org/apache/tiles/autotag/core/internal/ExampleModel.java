@@ -21,7 +21,6 @@
 package org.apache.tiles.autotag.core.internal;
 
 import org.apache.tiles.autotag.core.runtime.ModelBody;
-import org.apache.tiles.request.Request;
 
 /**
  * Example start/stop template.
@@ -38,7 +37,7 @@ public class ExampleModel {
      * @param request The request.
      * @param modelBody The model body.
      */
-    public void execute(String one, int two, Request request, ModelBody modelBody) {
+    public void execute(String one, int two, ExampleRequest request, ModelBody modelBody) {
         // Does nothing.
     }
 }

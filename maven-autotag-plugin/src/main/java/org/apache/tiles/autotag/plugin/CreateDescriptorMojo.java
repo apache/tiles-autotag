@@ -107,6 +107,13 @@ public class CreateDescriptorMojo extends AbstractMojo {
     Set<String> excludes;
 
     /**
+     * Name of the request class.
+     * @parameter expression="org.apache.tiles.request.Request"
+     * @required
+     */
+    String requestClass;
+
+    /**
      * @parameter expression="${project}"
      * @required
      * @readonly
@@ -123,6 +130,7 @@ public class CreateDescriptorMojo extends AbstractMojo {
             QDoxTemplateSuiteFactory factory = new QDoxTemplateSuiteFactory(filesSet.toArray(files));
             factory.setSuiteName(name);
             factory.setSuiteDocumentation(documentation);
+            factory.setRequestClass(requestClass);
             TemplateSuite suite = factory.createTemplateSuite();
             XStream xstream = new XStream();
             File dir = new File(outputDirectory, "META-INF");

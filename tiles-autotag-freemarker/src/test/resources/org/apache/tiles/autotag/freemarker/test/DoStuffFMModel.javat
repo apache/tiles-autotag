@@ -8,7 +8,6 @@ import java.util.Map;
 
 import org.apache.tiles.autotag.core.runtime.ModelBody;
 import org.apache.tiles.autotag.core.runtime.AutotagRuntime;
-import org.apache.tiles.request.Request;
 
 import freemarker.core.Environment;
 import freemarker.template.TemplateDirectiveBody;
@@ -41,16 +40,16 @@ public class DoStuffFMModel implements TemplateDirectiveModel {
     @Override
     public void execute(Environment env, @SuppressWarnings("rawtypes") Map params, TemplateModel[] loopVars,
             TemplateDirectiveBody body) throws TemplateException, IOException {
-        AutotagRuntime runtime = new org.apache.tiles.autotag.freemarker.test.Runtime();
+        AutotagRuntime<org.apache.tiles.autotag.freemarker.test.Request> runtime = new org.apache.tiles.autotag.freemarker.test.Runtime();
         if (runtime instanceof TemplateDirectiveModel) {
             ((TemplateDirectiveModel) runtime).execute(env, params, loopVars, body);
         }
-        Request request = runtime.createRequest();
+        org.apache.tiles.autotag.freemarker.test.Request request = runtime.createRequest();
         ModelBody modelBody = runtime.createModelBody();
         model.execute(
-            (java.lang.String) runtime.getParameter("one", null),
-            (java.lang.Integer) runtime.getParameter("two", 0),
-            (java.lang.Boolean) runtime.getParameter("three", false),
+            runtime.getParameter("one", java.lang.String.class, null),
+            runtime.getParameter("two", java.lang.Integer.class, 0),
+            runtime.getParameter("three", java.lang.Boolean.class, false),
                 request, modelBody
         );
     }

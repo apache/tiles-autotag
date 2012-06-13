@@ -9,7 +9,6 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.SimpleTagSupport;
 
 import org.apache.tiles.autotag.core.runtime.AutotagRuntime;
-import org.apache.tiles.request.Request;
 
 /**
  * Documentation of the DoStuffNoBody class.
@@ -99,7 +98,7 @@ public class DoStuffNoBodyTag extends SimpleTagSupport {
     /** {@inheritDoc} */
     @Override
     public void doTag() throws JspException, IOException {
-        AutotagRuntime runtime = new org.apache.tiles.autotag.jsp.test.Runtime();
+        AutotagRuntime<org.apache.tiles.autotag.jsp.test.Request> runtime = new org.apache.tiles.autotag.jsp.test.Runtime();
         if (runtime instanceof SimpleTagSupport) {
             SimpleTagSupport tag = (SimpleTagSupport) runtime;
             tag.setJspContext(getJspContext());
@@ -107,7 +106,7 @@ public class DoStuffNoBodyTag extends SimpleTagSupport {
             tag.setParent(getParent());
             tag.doTag();
         }
-        Request request = runtime.createRequest();        
+        org.apache.tiles.autotag.jsp.test.Request request = runtime.createRequest();        
         model.execute(
             one,
             two,

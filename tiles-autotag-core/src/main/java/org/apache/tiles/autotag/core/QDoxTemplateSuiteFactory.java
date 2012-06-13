@@ -33,7 +33,6 @@ import org.apache.tiles.autotag.model.TemplateMethod;
 import org.apache.tiles.autotag.model.TemplateParameter;
 import org.apache.tiles.autotag.model.TemplateSuite;
 import org.apache.tiles.autotag.model.TemplateSuiteFactory;
-import org.apache.tiles.request.Request;
 
 import com.thoughtworks.qdox.JavaDocBuilder;
 import com.thoughtworks.qdox.model.Annotation;
@@ -69,6 +68,11 @@ public class QDoxTemplateSuiteFactory implements TemplateSuiteFactory {
      * The documentation of the suite.
      */
     private String suiteDocumentation;
+
+    /**
+     * The request class the suite.
+     */
+    private String requestClass;
 
     /**
      * Constructor.
@@ -120,6 +124,15 @@ public class QDoxTemplateSuiteFactory implements TemplateSuiteFactory {
      */
     public void setSuiteDocumentation(String suiteDocumentation) {
         this.suiteDocumentation = suiteDocumentation;
+    }
+
+    /**
+     * Sets the request class used by the suite.
+     *
+     * @param requestClass The request class name.
+     */
+    public void setRequestClass(String requestClass) {
+        this.requestClass = requestClass;
     }
 
     @Override
@@ -198,9 +211,11 @@ public class QDoxTemplateSuiteFactory implements TemplateSuiteFactory {
                     }
                 }
             }
+            String parameterType = parameter.getType()
+                    .getFullyQualifiedName();
             TemplateParameter templateParameter = new TemplateParameter(
-                    parameter.getName(), exportedName, parameter.getType()
-                            .getFullyQualifiedName(), defaultValue, required);
+                    parameter.getName(), exportedName, parameterType, defaultValue, required,
+                    requestClass.equals(parameterType));
             params.add(templateParameter);
         }
         TemplateMethod templateMethod = new TemplateMethod(method.getName(),
@@ -238,7 +253,7 @@ public class QDoxTemplateSuiteFactory implements TemplateSuiteFactory {
             JavaParameter[] params = method.getParameters();
             if (params.length > 0) {
                 JavaParameter param = params[params.length - 1];
-                if (Request.class.getName().equals(
+                if (requestClass.equals(
                         param.getType().getFullyQualifiedName())) {
                     return true;
                 }
@@ -246,7 +261,7 @@ public class QDoxTemplateSuiteFactory implements TemplateSuiteFactory {
             if (params.length >= 2) {
                 JavaParameter param1 = params[params.length - 2];
                 JavaParameter param2 = params[params.length - 1];
-                if (Request.class.getName().equals(
+                if (requestClass.equals(
                         param1.getType().getFullyQualifiedName())
                         && ModelBody.class.getName().equals(
                                 param2.getType().getFullyQualifiedName())) {

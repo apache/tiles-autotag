@@ -42,8 +42,8 @@ import org.apache.tiles.autotag.model.TemplateSuite;
 import org.apache.tiles.autotag.plugin.internal.AnnotatedExampleModel;
 import org.apache.tiles.autotag.plugin.internal.ExampleExecutableModel;
 import org.apache.tiles.autotag.plugin.internal.ExampleModel;
+import org.apache.tiles.autotag.plugin.internal.ExampleRequest;
 import org.apache.tiles.autotag.plugin.internal.NotFeasibleExampleModel;
-import org.apache.tiles.request.Request;
 import org.junit.Test;
 
 import com.thoughtworks.xstream.XStream;
@@ -74,6 +74,7 @@ public class CreateDescriptorMojoTest {
         mojo.name = "test";
         mojo.documentation = "This are the docs";
         mojo.project = mavenProject;
+        mojo.requestClass = ExampleRequest.class.getName();
 
         mavenProject.addResource(isA(Resource.class));
 
@@ -109,7 +110,7 @@ public class CreateDescriptorMojoTest {
         assertEquals("Parameter two.", parameter.getDocumentation());
         parameter = parameters.get(2);
         assertEquals("request", parameter.getName());
-        assertEquals(Request.class.getName(), parameter.getType());
+        assertEquals(ExampleRequest.class.getName(), parameter.getType());
         assertEquals("The request.", parameter.getDocumentation());
         parameter = parameters.get(3);
         assertEquals("modelBody", parameter.getName());
@@ -152,7 +153,7 @@ public class CreateDescriptorMojoTest {
         assertEquals("Parameter two.", parameter.getDocumentation());
         parameter = parameters.get(2);
         assertEquals("request", parameter.getName());
-        assertEquals(Request.class.getName(), parameter.getType());
+        assertEquals(ExampleRequest.class.getName(), parameter.getType());
         assertEquals("The request.", parameter.getDocumentation());
 
         assertNull(suite.getTemplateClassByName(NotFeasibleExampleModel.class.getName()));

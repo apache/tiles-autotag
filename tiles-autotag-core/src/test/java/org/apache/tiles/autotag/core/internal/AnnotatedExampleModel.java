@@ -22,7 +22,6 @@ package org.apache.tiles.autotag.core.internal;
 
 import org.apache.tiles.autotag.core.runtime.ModelBody;
 import org.apache.tiles.autotag.core.runtime.annotation.Parameter;
-import org.apache.tiles.request.Request;
 
 /**
  * Example start/stop template.
@@ -41,7 +40,7 @@ public class AnnotatedExampleModel {
      */
     public void execute(
             @Parameter(defaultValue = "hello", name = "alternateOne", required = true) String one,
-            int two, Request request, ModelBody modelBody) {
+            int two, ExampleRequest request, ModelBody modelBody) {
         // Does nothing.
     }
 }

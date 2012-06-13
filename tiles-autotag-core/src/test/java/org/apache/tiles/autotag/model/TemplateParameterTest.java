@@ -23,7 +23,6 @@ package org.apache.tiles.autotag.model;
 import static org.junit.Assert.*;
 
 import org.apache.tiles.autotag.core.runtime.ModelBody;
-import org.apache.tiles.request.Request;
 import org.junit.Test;
 
 /**
@@ -38,7 +37,7 @@ public class TemplateParameterTest {
      */
     @Test
     public void testTemplateParameter() {
-        TemplateParameter parameter = new TemplateParameter("name", "exportedName", "type", "defaultValue", true);
+        TemplateParameter parameter = new TemplateParameter("name", "exportedName", "type", "defaultValue", true, false);
         assertEquals("name", parameter.getName());
         assertEquals("exportedName", parameter.getExportedName());
         assertEquals("type", parameter.getType());
@@ -48,17 +47,17 @@ public class TemplateParameterTest {
         assertFalse(parameter.isBody());
         assertFalse(parameter.isRequest());
 
-        parameter = new TemplateParameter("name", "exportedName", Request.class.getName(), "defaultValue", false);
+        parameter = new TemplateParameter("name", "exportedName", "my.Request", "defaultValue", false, true);
         assertEquals("name", parameter.getName());
         assertEquals("exportedName", parameter.getExportedName());
-        assertEquals(Request.class.getName(), parameter.getType());
+        assertEquals("my.Request", parameter.getType());
         assertEquals("defaultValue", parameter.getDefaultValue());
         assertFalse(parameter.isRequired());
         assertEquals("ExportedName", parameter.getGetterSetterSuffix());
         assertFalse(parameter.isBody());
         assertTrue(parameter.isRequest());
 
-        parameter = new TemplateParameter("name", "exportedName", ModelBody.class.getName(), "defaultValue", false);
+        parameter = new TemplateParameter("name", "exportedName", ModelBody.class.getName(), "defaultValue", false, false);
         assertEquals("name", parameter.getName());
         assertEquals("exportedName", parameter.getExportedName());
         assertEquals(ModelBody.class.getName(), parameter.getType());
@@ -74,7 +73,7 @@ public class TemplateParameterTest {
      */
     @Test
     public void testSetDocumentation() {
-        TemplateParameter parameter = new TemplateParameter("name", "exportedName", "type", "defaultValue", true);
+        TemplateParameter parameter = new TemplateParameter("name", "exportedName", "type", "defaultValue", true, false);
         parameter.setDocumentation("docs");
         assertEquals("docs", parameter.getDocumentation());
     }
@@ -84,10 +83,10 @@ public class TemplateParameterTest {
      */
     @Test
     public void testToString() {
-        TemplateParameter parameter = new TemplateParameter("name", "exportedName", "type", "defaultValue", true);
+        TemplateParameter parameter = new TemplateParameter("name", "exportedName", "type", "defaultValue", true, false);
         assertEquals(
                 "TemplateParameter [name=name, exportedName=exportedName, "
-                        + "documentation=null, type=type, defaultValue=defaultValue, required=true]",
+                        + "documentation=null, type=type, defaultValue=defaultValue, required=true, request=false]",
                 parameter.toString());
     }
 

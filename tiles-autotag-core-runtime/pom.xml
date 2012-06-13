@@ -113,10 +113,6 @@ under the License.
 
   <dependencies>
       <dependency>
-          <groupId>org.apache.tiles</groupId>
-          <artifactId>tiles-request-api</artifactId>
-      </dependency>
-      <dependency>
       	<groupId>junit</groupId>
       	<artifactId>junit</artifactId>
       	<scope>test</scope>

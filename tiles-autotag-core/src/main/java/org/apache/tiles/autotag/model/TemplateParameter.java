@@ -21,7 +21,6 @@
 package org.apache.tiles.autotag.model;
 
 import org.apache.tiles.autotag.core.runtime.ModelBody;
-import org.apache.tiles.request.Request;
 
 /**
  * It represents a parameter in a method in a parsed template class.
@@ -47,7 +46,7 @@ public class TemplateParameter {
     private String documentation;
 
     /**
-     * The type of the prameter.
+     * The type of the parameter.
      */
     private String type;
 
@@ -62,6 +61,11 @@ public class TemplateParameter {
     private boolean required;
 
     /**
+     * Indicates that this parameter is the request.
+     */
+    private boolean request;
+
+    /**
      * Constructor.
      *
      * @param name The name of the parameter.
@@ -71,12 +75,13 @@ public class TemplateParameter {
      * @param defaultValue The default value, as it will be written in Java code.
      * @param required Indicates that this parameter is required.
      */
-    public TemplateParameter(String name, String exportedName, String type, String defaultValue, boolean required) {
+    public TemplateParameter(String name, String exportedName, String type, String defaultValue, boolean required, boolean request) {
         this.name = name;
         this.exportedName = exportedName;
         this.type = type;
         this.defaultValue = defaultValue;
         this.required = required;
+        this.request = request;
     }
 
     /**
@@ -158,7 +163,7 @@ public class TemplateParameter {
      * @return <code>true</code> if the parameter is a request.
      */
     public boolean isRequest() {
-        return Request.class.getName().equals(type);
+        return request;
     }
 
     /**
@@ -176,6 +181,6 @@ public class TemplateParameter {
         return "TemplateParameter [name=" + name + ", exportedName="
                 + exportedName + ", documentation=" + documentation + ", type="
                 + type + ", defaultValue=" + defaultValue + ", required="
-                + required + "]";
+                + required + ", request=" + request + "]";
     }
 }

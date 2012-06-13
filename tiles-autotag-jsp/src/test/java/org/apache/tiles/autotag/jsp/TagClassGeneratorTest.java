@@ -38,7 +38,6 @@ import org.apache.tiles.autotag.model.TemplateClass;
 import org.apache.tiles.autotag.model.TemplateMethod;
 import org.apache.tiles.autotag.model.TemplateParameter;
 import org.apache.tiles.autotag.model.TemplateSuite;
-import org.apache.tiles.request.Request;
 import org.apache.velocity.app.VelocityEngine;
 import org.junit.Test;
 
@@ -49,6 +48,8 @@ import org.junit.Test;
  */
 public class TagClassGeneratorTest {
 
+    public static final String REQUEST_CLASS = "org.apache.tiles.autotag.jsp.test.Request";
+    
     /**
      * Test method for {@link TagClassGenerator#generate(File, String, TemplateSuite, TemplateClass, Map)}.
      * @throws Exception If something goes wrong.
@@ -71,19 +72,19 @@ public class TagClassGeneratorTest {
         parameters.put("taglibURI", "http://www.initrode.net/tags/test");
 
         List<TemplateParameter> params = new ArrayList<TemplateParameter>();
-        TemplateParameter param = new TemplateParameter("one", "one", "java.lang.String", null, true);
+        TemplateParameter param = new TemplateParameter("one", "one", "java.lang.String", null, true, false);
         param.setDocumentation("Parameter one.");
         params.add(param);
-        param = new TemplateParameter("two", "two", "int", null, false);
+        param = new TemplateParameter("two", "two", "int", null, false, false);
         param.setDocumentation("Parameter two.");
         params.add(param);
-        param = new TemplateParameter("three", "three", "boolean", null, false);
+        param = new TemplateParameter("three", "three", "boolean", null, false, false);
         param.setDocumentation("Parameter three.");
         params.add(param);
-        param = new TemplateParameter("request", "request", Request.class.getName(), null, false);
+        param = new TemplateParameter("request", "request", REQUEST_CLASS, null, false, true);
         param.setDocumentation("The request.");
         params.add(param);
-        param = new TemplateParameter("modelBody", "modelBody", ModelBody.class.getName(), null, false);
+        param = new TemplateParameter("modelBody", "modelBody", ModelBody.class.getName(), null, false, false);
         param.setDocumentation("The body.");
         params.add(param);
         TemplateMethod executeMethod = new TemplateMethod("execute", params);
@@ -93,7 +94,7 @@ public class TagClassGeneratorTest {
         clazz.setDocumentation("Documentation of the DoStuff class.");
 
         generator.generate(file, "org.apache.tiles.autotag.jsp.test", suite, clazz, parameters,
-                           "org.apache.tiles.autotag.jsp.test.Runtime");
+                           "org.apache.tiles.autotag.jsp.test.Runtime", REQUEST_CLASS);
 
         InputStream expected = getClass().getResourceAsStream("/org/apache/tiles/autotag/jsp/test/DoStuffTag.java");
         File effectiveFile = new File(file, "/org/apache/tiles/autotag/jsp/test/DoStuffTag.java");
@@ -105,16 +106,16 @@ public class TagClassGeneratorTest {
 
         suite.addTemplateClass(clazz);
         params = new ArrayList<TemplateParameter>();
-        param = new TemplateParameter("one", "one", "java.lang.Double", null, true);
+        param = new TemplateParameter("one", "one", "java.lang.Double", null, true, false);
         param.setDocumentation("Parameter one.");
         params.add(param);
-        param = new TemplateParameter("two", "two", "float", null, false);
+        param = new TemplateParameter("two", "two", "float", null, false, false);
         param.setDocumentation("Parameter two.");
         params.add(param);
-        param = new TemplateParameter("three", "three", "java.util.Date", null, false);
+        param = new TemplateParameter("three", "three", "java.util.Date", null, false, false);
         param.setDocumentation("Parameter three.");
         params.add(param);
-        param = new TemplateParameter("request", "request", Request.class.getName(), null, false);
+        param = new TemplateParameter("request", "request", REQUEST_CLASS, null, false, true);
         param.setDocumentation("The request.");
         params.add(param);
         executeMethod = new TemplateMethod("execute", params);
@@ -126,7 +127,7 @@ public class TagClassGeneratorTest {
         suite.addTemplateClass(clazz);
 
         generator.generate(file, "org.apache.tiles.autotag.jsp.test", suite, clazz, parameters,
-                           "org.apache.tiles.autotag.jsp.test.Runtime");
+                           "org.apache.tiles.autotag.jsp.test.Runtime", REQUEST_CLASS);
 
         expected = getClass().getResourceAsStream("/org/apache/tiles/autotag/jsp/test/DoStuffNoBodyTag.java");
         effectiveFile = new File(file, "/org/apache/tiles/autotag/jsp/test/DoStuffNoBodyTag.java");

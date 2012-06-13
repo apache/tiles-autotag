@@ -72,11 +72,6 @@ under the License.
                 <version>1.10.1</version>
             </dependency>
             <dependency>
-                <groupId>org.apache.tiles</groupId>
-                <artifactId>tiles-request-api</artifactId>
-                <version>1.0.0</version>
-            </dependency>
-            <dependency>
                 <groupId>org.easymock</groupId>
                 <artifactId>easymock</artifactId>
                 <version>3.0</version>

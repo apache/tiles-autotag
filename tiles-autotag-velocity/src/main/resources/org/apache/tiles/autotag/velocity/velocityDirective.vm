@@ -29,7 +29,6 @@ import java.io.Writer;
 import org.apache.tiles.autotag.core.runtime.ModelBody;
 #end
 import org.apache.tiles.autotag.core.runtime.AutotagRuntime;
-import org.apache.tiles.request.Request;
 import org.apache.velocity.context.InternalContextAdapter;
 import org.apache.velocity.runtime.directive.Directive;
 import org.apache.velocity.runtime.parser.node.Node;
@@ -62,17 +61,17 @@ public class ${clazz.tagClassPrefix}Directive extends Directive {
     @Override
     public boolean render(InternalContextAdapter context, Writer writer, Node node)
             throws IOException {
-        AutotagRuntime runtime = new ${runtimeClass}();
+        AutotagRuntime<${requestClass}> runtime = new ${runtimeClass}();
         if (runtime instanceof Directive) {
             ((Directive) runtime).render(context, writer, node);
         }
-        Request request = runtime.createRequest();
+        ${requestClass} request = runtime.createRequest();
 #if(${clazz.hasBody()})
         ModelBody modelBody = runtime.createModelBody();
 #end
         model.execute(
 #foreach($parameter in ${clazz.parameters})
-            ($stringTool.getClassToCast(${parameter.type})) runtime.getParameter("${parameter.exportedName}", $stringTool.getDefaultValue(${parameter.type}, ${parameter.defaultValue})),
+            runtime.getParameter("${parameter.exportedName}", ${stringTool.getClassToCast(${parameter.type})}.class, $stringTool.getDefaultValue(${parameter.type}, ${parameter.defaultValue})),
 #end
             request#if(${clazz.hasBody()}), modelBody#end
 
