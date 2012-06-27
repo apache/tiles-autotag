@@ -136,8 +136,10 @@ mvn release:prepare -Dusername=YOUR_SVN_USER -Dpassword=YOUR_SVN_PASSWORD
 -----------------------------------
 
   The plugin interactively will ask you the version to release, the Subversion
-  tag to use and the next snapshot version. It is reccomended to use the tag:
-  <<tiles-X.X.X>>.
+  tag to use and the next snapshot version. It is recommended to use the tag:
+  <<tiles-autotag-X.X.X>>.
+  
+  See also {{{http://www.apache.org/dev/publishing-maven-artifacts.html}the recommendations of the ASF}}.
 
 * Perform the Release
 
@@ -146,6 +148,8 @@ mvn release:prepare -Dusername=YOUR_SVN_USER -Dpassword=YOUR_SVN_PASSWORD
 -----------------------------------
 mvn release:perform
 -----------------------------------
+  
+  It should compile and test everything, build and upload the artifacts and the website for the project. 
 
 * Close the staging repository
 
@@ -168,32 +172,11 @@ mvn release:perform
 
   Note the repository URL, you will need this in your vote email.
 
-* Digest and upload assemblies
+* Verify the uploaded assemblies
 
-  * Go into the release assembly target directory:
-
------------------------------------
-cd target/checkout/assembly/target/assembly/out
------------------------------------
-
-  * Create MD5 and SHA1 files for each files (including ASC files). You can do
-  it with this simple shell script:
-
------------------------------------
-#!/bin/sh
-
-for fileitem in *
-do
-  openssl md5 < $fileitem > $fileitem.md5
-  openssl sha1 < $fileitem > $fileitem.sha1
-done
------------------------------------
-
-  * Upload everything to the build site:
-
------------------------------------
-scp * user@people.apache.org:/www/people.apache.org/builds/tiles/${version}
------------------------------------
+  * go to the destination directory on people.apache.org (cd /www/people.apache.org/builds/tiles/autotag/${version})
+  
+  * check the presence of the 3 distributions (bin, doc and src), and their signature files (*.asc, *.md5, *sha1). 
 
 * Release the JIRA version
 
@@ -208,12 +191,12 @@ scp * user@people.apache.org:/www/people.apache.org/builds/tiles/${version}
   In <<developers mailing list>> send an announcement for the test build:
 
 -----------------------------------
-Subject: [ANNOUNCE] Tiles ${version} test build available
+Subject: [ANNOUNCE] Tiles Autotag ${version} test build available
 
-The test build of Tiles ${version} is available.
+The test build of Tiles Autotag ${version} is available.
 
 
-No determination as to the quality ('alpha,' 'beta,' or 'GA') of Tiles
+No determination as to the quality ('alpha,' 'beta,' or 'GA') of Tiles Autotag
 ${version} has been made, and at this time it is simply a "test build". We
 welcome any comments you may have, and will take all feedback into
 account if a quality vote is called for this build.
@@ -240,9 +223,9 @@ within the next couple of days.
   <<developers mailing list>>.
 
 -----------------------------------
-Subject: [VOTE] ${version} Release Quality
+Subject: [VOTE] Tiles Autotag ${version} Release Quality
 
-The Tiles ${version} test build has been available since ${testBuildDate}.
+The Tiles Autotag ${version} test build has been available since ${testBuildDate}.
 
 Release notes:
 
@@ -250,7 +233,7 @@ Release notes:
 
 Distribution:
 
- * http://people.apache.org/builds/tiles/${version}/
+ * http://people.apache.org/builds/tiles/autotag/${version}/
 
 Maven 2 staging repository:
 
@@ -294,9 +277,9 @@ three binding +1s and more +1s than -1s.
 -------------------------------------------
 ssh user@people.apache.org
 
-cd /www/people.apache.org/builds/tiles/${version}
-mkdir /www/www.apache.org/dist/tiles/v${version}/
-cp * /www/www.apache.org/dist/tiles/v${version}/
+cd /www/people.apache.org/builds/tiles/autotag/${version}
+mkdir /www/www.apache.org/dist/tiles/autotag/v${version}/
+cp * /www/www.apache.org/dist/tiles/autotag/v${version}/
 -------------------------------------------
 
 ** Update the site
@@ -322,23 +305,22 @@ mvn site:deploy
   list>>:
 
 --------------------------------------
-Subject: [ANNOUNCE] Tiles ${version} ${quality} released
+Subject: [ANNOUNCE] Tiles Autotag ${version} ${quality} released
 
-The Apache Tiles team is pleased to announce the release of Tiles ${version}
+The Apache Tiles team is pleased to announce the release of Tiles Autotag ${version}
 ${quality}.
 
-Tiles ${version} is available in a binary and a source distribution.
+Tiles Autotag ${version} is available in a binary and a source distribution.
 
 http://tiles.apache.org/download.html
 
 It is also available in the central Maven repository under Group ID
 "org.apache.tiles".
 
-The 2.0.x series of the Apache Tiles framework has a minimum
+The 1.x series of the Apache Tiles Autotag framework has a minimum
 requirement of the following specification versions:
 
-* Java Servlet 2.4 and JavaServer Pages (JSP) 2.0
-* Java Standard Edition (Java SE) 1.5
+* Java Standard Edition (Java SE) 1.6
 
 The release notes are available online at:
 
