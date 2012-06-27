@@ -1,0 +1,11 @@
+   Apache Tiles Autotag
+   Copyright 1999-2012 The Apache Software Foundation
+
+   This product includes software developed at
+   The Apache Software Foundation (http://www.apache.org/).
+
+   The binary distribution contains software developed by:
+
+   Visigoth Software Society (Freemarker): http://freemarker.org/
+   Codehaus (QDox, XStream): http://mvel.codehaus.org/
+

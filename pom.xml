@@ -51,6 +51,7 @@ under the License.
         <module>tiles-autotag-freemarker</module>
         <module>tiles-autotag-velocity</module>
         <module>maven-autotag-plugin</module>
+        <module>assembly</module>
     </modules>
     <distributionManagement>
         <site>
