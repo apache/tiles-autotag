@@ -52,6 +52,13 @@
         </configuration>
       </plugin>
     </plugins>
+    <extensions>
+      <extension>
+        <groupId>org.apache.maven.wagon</groupId>
+        <artifactId>wagon-ssh</artifactId>
+        <version>1.0</version>
+      </extension>
+    </extensions>
   </build>
   <profiles>
     <profile>
@@ -117,14 +124,7 @@
           <plugin>
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>wagon-maven-plugin</artifactId>
-            <version>1.0</version>
-            <dependencies>
-              <dependency>
-                <groupId>org.apache.maven.wagon</groupId>
-                <artifactId>wagon-ssh</artifactId>
-                <version>1.0</version>
-              </dependency>
-            </dependencies>
+            <version>1.0-beta-4</version>
             <executions>
               <execution>
                 <phase>deploy</phase>
