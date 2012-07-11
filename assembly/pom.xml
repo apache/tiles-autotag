@@ -114,7 +114,7 @@
                         <include name="${project.artifactId}-${project.version}-*.tar.gz*" />
                         <exclude name="${project.artifactId}-${project.version}-source-release.*" />
                       </fileset>
-                      <mapper type="glob" from="${project.artifactId}-*" to="tiles-request-*" />
+                      <mapper type="glob" from="${project.artifactId}-*" to="tiles-autotag-*" />
                     </copy>
                   </tasks>
                 </configuration>
