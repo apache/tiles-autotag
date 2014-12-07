@@ -21,23 +21,27 @@
 package org.apache.tiles.autotag.plugin;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.jar.JarFile;
-import java.util.zip.ZipEntry;
 
 import org.apache.maven.model.Resource;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugins.annotations.Component;
+import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
+import org.apache.tiles.autotag.core.OutputLocator;
 import org.apache.tiles.autotag.generate.TemplateGenerator;
 import org.apache.tiles.autotag.generate.TemplateGeneratorFactory;
 import org.apache.tiles.autotag.model.TemplateSuite;
 import org.apache.velocity.app.VelocityEngine;
+import org.sonatype.plexus.build.incremental.BuildContext;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.converters.reflection.Sun14ReflectionProvider;
@@ -48,65 +52,63 @@ import com.thoughtworks.xstream.converters.reflection.Sun14ReflectionProvider;
  * @version $Rev$ $Date$
  */
 public abstract class AbstractGenerateMojo extends AbstractMojo {
-    /**
+	/**
      * The position of the template suite XML descriptor.
      */
     static final String META_INF_TEMPLATE_SUITE_XML = "META-INF/template-suite.xml";
 
     /**
      * The classpath elements.
-     *
-     * @parameter expression="${project.compileClasspathElements}"
-     * @required
-     * @readonly
      */
+    @Parameter(property = "project.compileClasspathElements", required = true, readonly = true)
     List<String> classpathElements;
 
     /**
      * Location of the generated classes.
-     *
-     * @parameter expression="${project.build.directory}/autotag-classes"
-     * @required
      */
-    File classesOutputDirectory;
+	@Parameter(defaultValue = "${project.build.directory}/autotag-classes", required = true)
+	File classesOutputDirectory;
 
     /**
      * Location of the generated resources.
-     *
-     * @parameter expression="${project.build.directory}/autotag-resources"
-     * @required
      */
+	@Parameter(defaultValue = "${project.build.directory}/autotag-resources", required = true)
     File resourcesOutputDirectory;
 
     /**
      * Name of the request class.
-     * @parameter expression="org.apache.tiles.request.Request"
-     * @required
      */
+	@Parameter(defaultValue = "org.apache.tiles.request.Request", required = true)
     String requestClass;
 
     /**
      * Name of the package.
-     * @parameter expression="sample"
-     * @required
      */
+	@Parameter(required = true)
     String packageName;
 
-    /**
-     * @parameter expression="${project}"
-     * @required
-     * @readonly
-     */
+	@Component
     MavenProject project;
 
+	@Component
+    BuildContext buildContext;
+    
+	OutputLocator classesOutputLocator;
+	OutputLocator resourcesOutputLocator;
+	
     /** {@inheritDoc} */
     public void execute() throws MojoExecutionException {
         try {
-            InputStream stream = findTemplateSuiteDescriptor();
-            XStream xstream = new XStream(new Sun14ReflectionProvider());
-            TemplateSuite suite = (TemplateSuite) xstream.fromXML(stream);
-            stream.close();
-
+        	TemplateSuite suite;
+        	InputStream stream = findTemplateSuiteDescriptor();
+            try {
+	            XStream xstream = new XStream(new Sun14ReflectionProvider());
+	            suite = (TemplateSuite) xstream.fromXML(stream);
+            } finally {
+	            stream.close();
+            }
+            classesOutputLocator = new MavenOutputLocator(classesOutputDirectory);
+            resourcesOutputLocator = new MavenOutputLocator(resourcesOutputDirectory);
             Properties props = new Properties();
             InputStream propsStream = getClass().getResourceAsStream("/org/apache/tiles/autotag/velocity.properties");
             props.load(propsStream);
@@ -115,11 +117,13 @@ public abstract class AbstractGenerateMojo extends AbstractMojo {
                     new VelocityEngine(props)).createTemplateGenerator();
             generator.generate(packageName, suite, getParameters(), getRuntimeClass(), requestClass);
             if (generator.isGeneratingResources()) {
+            	buildContext.refresh(resourcesOutputDirectory);
                 Resource resource = new Resource();
                 resource.setDirectory(resourcesOutputDirectory.getAbsolutePath());
                 project.addResource(resource);
             }
             if (generator.isGeneratingClasses()) {
+            	buildContext.refresh(classesOutputDirectory);
                 project.addCompileSourceRoot(classesOutputDirectory.getAbsolutePath());
             }
         } catch (IOException e) {
@@ -153,25 +157,15 @@ public abstract class AbstractGenerateMojo extends AbstractMojo {
      * @throws IOException If something goes wrong.
      */
     private InputStream findTemplateSuiteDescriptor() throws IOException {
-        InputStream retValue = null;
-
-        for (String path : classpathElements) {
-            File file = new File(path);
-            if (file.isDirectory()) {
-                File candidate = new File(file, META_INF_TEMPLATE_SUITE_XML);
-                if (candidate.exists()) {
-                    return new FileInputStream(candidate);
-                }
-            } else if (file.getPath().endsWith(".jar")) {
-                JarFile jar = new JarFile(file);
-                ZipEntry entry = jar.getEntry(META_INF_TEMPLATE_SUITE_XML);
-                if (entry != null) {
-                    return jar.getInputStream(entry);
-                }
-            }
+        URL[] urls = new URL[classpathElements.size()];
+        int i = 0;
+        for ( String classpathElement: classpathElements )
+        {
+            urls[i++] = new File(classpathElement).toURI().toURL();
         }
 
-        return retValue;
+        ClassLoader cl = new URLClassLoader( urls );
+        return cl.getResourceAsStream(META_INF_TEMPLATE_SUITE_XML);
     }
 
     /**
@@ -179,4 +173,21 @@ public abstract class AbstractGenerateMojo extends AbstractMojo {
      * @return The name of the Runtime class.
      */
     protected abstract String getRuntimeClass();
+
+    private final class MavenOutputLocator implements OutputLocator {
+    	
+    	private File outputDirectory;
+    	
+    	private MavenOutputLocator(File outputDirectory) {
+    		this.outputDirectory = outputDirectory;
+    	}
+    	
+		@Override
+		public OutputStream getOutputStream(String resourcePath)
+				throws IOException {
+			File target = new File(outputDirectory, resourcePath);
+			target.getParentFile().mkdirs();
+			return buildContext.newFileOutputStream(target);
+		}
+	}
 }

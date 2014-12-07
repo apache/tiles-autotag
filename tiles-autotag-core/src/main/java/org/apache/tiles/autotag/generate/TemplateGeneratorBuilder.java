@@ -20,10 +20,10 @@
  */
 package org.apache.tiles.autotag.generate;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.tiles.autotag.core.OutputLocator;
 import org.apache.tiles.autotag.generate.BasicTemplateGenerator.TCGeneratorDirectoryPair;
 import org.apache.tiles.autotag.generate.BasicTemplateGenerator.TSGeneratorDirectoryPair;
 
@@ -57,12 +57,12 @@ public class TemplateGeneratorBuilder {
     /**
      * The classes output directory.
      */
-    private File classesOutputDirectory;
+    private OutputLocator classesOutputLocator;
 
     /**
      * The resources output directory.
      */
-    private File resourcesOutputDirectory;
+    private OutputLocator resourcesOutputLocator;
 
     /**
      * Constructor.
@@ -87,8 +87,8 @@ public class TemplateGeneratorBuilder {
      * @param classesOutputDirectory The classes output directory.
      * @return This instance.
      */
-    public TemplateGeneratorBuilder setClassesOutputDirectory(File classesOutputDirectory) {
-        this.classesOutputDirectory = classesOutputDirectory;
+    public TemplateGeneratorBuilder setClassesOutputLocator(OutputLocator classesOutputLocator) {
+        this.classesOutputLocator = classesOutputLocator;
         return this;
     }
 
@@ -98,8 +98,8 @@ public class TemplateGeneratorBuilder {
      * @param resourcesOutputDirectory The resources output directory.
      * @return This instance.
      */
-    public TemplateGeneratorBuilder setResourcesOutputDirectory(File resourcesOutputDirectory) {
-        this.resourcesOutputDirectory = resourcesOutputDirectory;
+    public TemplateGeneratorBuilder setResourcesOutputLocator(OutputLocator resourcesOutputLocator) {
+        this.resourcesOutputLocator = resourcesOutputLocator;
         return this;
     }
 
@@ -110,12 +110,12 @@ public class TemplateGeneratorBuilder {
      * @return This instance.
      */
     public TemplateGeneratorBuilder addClassesTemplateSuiteGenerator(TemplateSuiteGenerator generator) {
-        if (classesOutputDirectory == null) {
+        if (classesOutputLocator == null) {
             throw new NullPointerException(
-                    "Classes output directory not specified, call 'setClassesOutputDirectory' first");
+                    "Classes output locator not specified, call 'setClassesOutputLocator' first");
         }
         templateSuiteGenerators.add(new TSGeneratorDirectoryPair(
-                classesOutputDirectory, generator));
+                classesOutputLocator, generator));
         generatingClasses = true;
         return this;
     }
@@ -127,12 +127,12 @@ public class TemplateGeneratorBuilder {
      * @return This instance.
      */
     public TemplateGeneratorBuilder addClassesTemplateClassGenerator(TemplateClassGenerator generator) {
-        if (classesOutputDirectory == null) {
+        if (classesOutputLocator == null) {
             throw new NullPointerException(
-                    "Classes output directory not specified, call 'setClassesOutputDirectory' first");
+                    "Classes output locator not specified, call 'setClassesOutputLocator' first");
         }
         templateClassGenerators.add(new TCGeneratorDirectoryPair(
-                classesOutputDirectory, generator));
+                classesOutputLocator, generator));
         generatingClasses = true;
         return this;
     }
@@ -144,12 +144,12 @@ public class TemplateGeneratorBuilder {
      * @return This instance.
      */
     public TemplateGeneratorBuilder addResourcesTemplateSuiteGenerator(TemplateSuiteGenerator generator) {
-        if (resourcesOutputDirectory == null) {
+        if (resourcesOutputLocator == null) {
             throw new NullPointerException(
-                    "Resources output directory not specified, call 'setClassesOutputDirectory' first");
+                    "Resources output locator not specified, call 'setClassesOutputLocator' first");
         }
         templateSuiteGenerators.add(new TSGeneratorDirectoryPair(
-                resourcesOutputDirectory, generator));
+                resourcesOutputLocator, generator));
         generatingResources = true;
         return this;
     }
@@ -161,12 +161,12 @@ public class TemplateGeneratorBuilder {
      * @return This instance.
      */
     public TemplateGeneratorBuilder addResourcesTemplateClassGenerator(TemplateClassGenerator generator) {
-        if (resourcesOutputDirectory == null) {
+        if (resourcesOutputLocator == null) {
             throw new NullPointerException(
-                    "Resources output directory not specified, call 'setClassesOutputDirectory' first");
+                    "Resources output locator not specified, call 'setClassesOutputLocator' first");
         }
         templateClassGenerators.add(new TCGeneratorDirectoryPair(
-                resourcesOutputDirectory, generator));
+        		resourcesOutputLocator, generator));
         generatingResources = true;
         return this;
     }

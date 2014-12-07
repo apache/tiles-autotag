@@ -20,10 +20,10 @@
  */
 package org.apache.tiles.autotag.generate;
 
-import java.io.File;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.tiles.autotag.core.OutputLocator;
 import org.apache.tiles.autotag.model.TemplateClass;
 import org.apache.tiles.autotag.model.TemplateSuite;
 
@@ -79,11 +79,11 @@ class BasicTemplateGenerator implements TemplateGenerator {
     public void generate(String packageName, TemplateSuite suite, Map<String, String> parameters, 
         String runtimeClass, String requestClass) {
         for (TSGeneratorDirectoryPair pair : templateSuiteGenerators) {
-            pair.getGenerator().generate(pair.getDirectory(), packageName, suite, parameters);
+            pair.getGenerator().generate(pair.getOutputLocator(), packageName, suite, parameters);
         }
         for (TemplateClass templateClass : suite.getTemplateClasses()) {
             for (TCGeneratorDirectoryPair pair : templateClassGenerators) {
-                pair.getGenerator().generate(pair.getDirectory(), packageName,
+                pair.getGenerator().generate(pair.getOutputLocator(), packageName,
                         suite, templateClass, parameters, runtimeClass, requestClass);
             }
         }
@@ -98,7 +98,7 @@ class BasicTemplateGenerator implements TemplateGenerator {
         /**
          * The directory where files are generated.
          */
-        private File directory;
+        private OutputLocator outputLocator;
 
         /**
          * The generator.
@@ -111,9 +111,9 @@ class BasicTemplateGenerator implements TemplateGenerator {
          * @param directory The directory where files are generated.
          * @param generator The generator.
          */
-        public TSGeneratorDirectoryPair(File directory,
+        public TSGeneratorDirectoryPair(OutputLocator outputLocator,
                 TemplateSuiteGenerator generator) {
-            this.directory = directory;
+            this.outputLocator = outputLocator;
             this.generator = generator;
         }
 
@@ -122,8 +122,8 @@ class BasicTemplateGenerator implements TemplateGenerator {
          *
          * @return The directory where files are generated.
          */
-        public File getDirectory() {
-            return directory;
+        public OutputLocator getOutputLocator() {
+            return outputLocator;
         }
 
         /**
@@ -145,7 +145,7 @@ class BasicTemplateGenerator implements TemplateGenerator {
         /**
          * The directory where files are generated.
          */
-        private File directory;
+        private OutputLocator outputLocator;
 
         /**
          * The generator.
@@ -158,9 +158,9 @@ class BasicTemplateGenerator implements TemplateGenerator {
          * @param directory The directory where files are generated.
          * @param generator The generator.
          */
-        public TCGeneratorDirectoryPair(File directory,
+        public TCGeneratorDirectoryPair(OutputLocator outputLocator,
                 TemplateClassGenerator generator) {
-            this.directory = directory;
+            this.outputLocator = outputLocator;
             this.generator = generator;
         }
 
@@ -169,8 +169,8 @@ class BasicTemplateGenerator implements TemplateGenerator {
          *
          * @return The directory where files are generated.
          */
-        public File getDirectory() {
-            return directory;
+        public OutputLocator getOutputLocator() {
+            return outputLocator;
         }
 
         /**

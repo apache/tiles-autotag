@@ -20,15 +20,19 @@
  */
 package org.apache.tiles.autotag.generate;
 
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.*;
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.tiles.autotag.core.OutputLocator;
 import org.apache.tiles.autotag.generate.BasicTemplateGenerator.TCGeneratorDirectoryPair;
 import org.apache.tiles.autotag.generate.BasicTemplateGenerator.TSGeneratorDirectoryPair;
 import org.apache.tiles.autotag.model.TemplateClass;
@@ -48,8 +52,7 @@ public class BasicTemplateGeneratorTest {
      */
     @Test
     public void testGenerate() throws IOException {
-        File file = File.createTempFile("tiles", "template");
-        file.deleteOnExit();
+    	OutputLocator locator = createMock(OutputLocator.class);
         TemplateSuite suite = createMock(TemplateSuite.class);
         TemplateClass templateClass = createMock(TemplateClass.class);
         TemplateSuiteGenerator templateSuiteGenerator = createMock(TemplateSuiteGenerator.class);
@@ -61,12 +64,12 @@ public class BasicTemplateGeneratorTest {
         templateClasses.add(templateClass);
 
         expect(suite.getTemplateClasses()).andReturn(templateClasses);
-        templateSuiteGenerator.generate(file, "my.package", suite, parameters);
-        templateClassGenerator.generate(file, "my.package", suite, templateClass, parameters, "my.Runtime", "my.Request");
+        templateSuiteGenerator.generate(locator, "my.package", suite, parameters);
+        templateClassGenerator.generate(locator, "my.package", suite, templateClass, parameters, "my.Runtime", "my.Request");
 
         replay(suite, templateClass, templateSuiteGenerator, templateClassGenerator, parameters);
-        TSGeneratorDirectoryPair tsPair = new TSGeneratorDirectoryPair(file, templateSuiteGenerator);
-        TCGeneratorDirectoryPair tcPair = new TCGeneratorDirectoryPair(file, templateClassGenerator);
+        TSGeneratorDirectoryPair tsPair = new TSGeneratorDirectoryPair(locator, templateSuiteGenerator);
+        TCGeneratorDirectoryPair tcPair = new TCGeneratorDirectoryPair(locator, templateClassGenerator);
         List<TSGeneratorDirectoryPair> tsList = new ArrayList<BasicTemplateGenerator.TSGeneratorDirectoryPair>();
         tsList.add(tsPair);
         List<TCGeneratorDirectoryPair> tcList = new ArrayList<BasicTemplateGenerator.TCGeneratorDirectoryPair>();

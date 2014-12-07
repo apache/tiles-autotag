@@ -31,6 +31,8 @@ import java.util.Properties;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.tiles.autotag.core.DirectoryOutputLocator;
+import org.apache.tiles.autotag.core.OutputLocator;
 import org.apache.tiles.autotag.core.runtime.ModelBody;
 import org.apache.tiles.autotag.model.TemplateClass;
 import org.apache.tiles.autotag.model.TemplateMethod;
@@ -62,10 +64,9 @@ public class VelocityDirectiveGeneratorTest {
         VelocityEngine velocityEngine = new VelocityEngine(props);
 
         VelocityDirectiveGenerator generator = new VelocityDirectiveGenerator(velocityEngine);
-        File file = File.createTempFile("autotag", null);
-        file.delete();
-        file.mkdir();
-        file.deleteOnExit();
+        File tempDir = new File(System.getProperty("java.io.tmpdir"), "autotag");
+        OutputLocator locator = new DirectoryOutputLocator(tempDir);
+        tempDir.deleteOnExit();
         TemplateSuite suite = new TemplateSuite("tldtest", "Test for TLD docs.");
 
         List<TemplateParameter> params = new ArrayList<TemplateParameter>();
@@ -90,13 +91,13 @@ public class VelocityDirectiveGeneratorTest {
                 "doStuff", "DoStuff", executeMethod);
         clazz.setDocumentation("Documentation of the DoStuff class.");
 
-        generator.generate(file, "org.apache.tiles.autotag.velocity.test", suite, clazz, null,
+        generator.generate(locator, "org.apache.tiles.autotag.velocity.test", suite, clazz, null,
                            "org.apache.tiles.autotag.velocity.test.Runtime", REQUEST_CLASS);
 
         InputStream expected = getClass()
                 .getResourceAsStream(
                         "/org/apache/tiles/autotag/velocity/test/DoStuffDirective.javat");
-        File effectiveFile = new File(file, "/org/apache/tiles/autotag/velocity/test/DoStuffDirective.java");
+        File effectiveFile = new File(tempDir, "/org/apache/tiles/autotag/velocity/test/DoStuffDirective.java");
         assertTrue(effectiveFile.exists());
         InputStream effective = new FileInputStream(effectiveFile);
         assertTrue(IOUtils.contentEquals(effective, expected));
@@ -125,20 +126,20 @@ public class VelocityDirectiveGeneratorTest {
 
         suite.addTemplateClass(clazz);
 
-        generator.generate(file, "org.apache.tiles.autotag.velocity.test", suite, clazz, null,
+        generator.generate(locator, "org.apache.tiles.autotag.velocity.test", suite, clazz, null,
                            "org.apache.tiles.autotag.velocity.test.Runtime", REQUEST_CLASS);
 
         expected = getClass()
                 .getResourceAsStream(
                         "/org/apache/tiles/autotag/velocity/test/DoStuffNoBodyDirective.javat");
-        effectiveFile = new File(file, "/org/apache/tiles/autotag/velocity/test/DoStuffNoBodyDirective.java");
+        effectiveFile = new File(tempDir, "/org/apache/tiles/autotag/velocity/test/DoStuffNoBodyDirective.java");
         assertTrue(effectiveFile.exists());
         effective = new FileInputStream(effectiveFile);
         assertTrue(IOUtils.contentEquals(effective, expected));
         effective.close();
         expected.close();
 
-        FileUtils.deleteDirectory(file);
+        FileUtils.deleteDirectory(tempDir);
     }
 
 }

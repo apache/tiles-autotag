@@ -31,6 +31,8 @@ import java.util.Properties;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.tiles.autotag.core.DirectoryOutputLocator;
+import org.apache.tiles.autotag.core.OutputLocator;
 import org.apache.tiles.autotag.core.runtime.ModelBody;
 import org.apache.tiles.autotag.model.TemplateClass;
 import org.apache.tiles.autotag.model.TemplateMethod;
@@ -63,10 +65,9 @@ public class VelocityPropertiesGeneratorTest {
         VelocityEngine velocityEngine = new VelocityEngine(props);
 
         VelocityPropertiesGenerator generator = new VelocityPropertiesGenerator(velocityEngine);
-        File file = File.createTempFile("autotag", null);
-        file.delete();
-        file.mkdir();
-        file.deleteOnExit();
+        File tempDir = new File(System.getProperty("java.io.tmpdir"), "autotag");
+        OutputLocator locator = new DirectoryOutputLocator(tempDir);
+        tempDir.deleteOnExit();
         TemplateSuite suite = new TemplateSuite("tldtest", "Test for TLD docs.");
 
         List<TemplateParameter> params = new ArrayList<TemplateParameter>();
@@ -113,17 +114,17 @@ public class VelocityPropertiesGeneratorTest {
 
         suite.addTemplateClass(clazz);
 
-        generator.generate(file, "org.apache.tiles.autotag.velocity.test", suite, null);
+        generator.generate(locator, "org.apache.tiles.autotag.velocity.test", suite, null);
 
         InputStream expected = getClass().getResourceAsStream("/velocity.properties.test");
-        File effectiveFile = new File(file, "META-INF/velocity.properties");
+        File effectiveFile = new File(tempDir, "META-INF/velocity.properties");
         assertTrue(effectiveFile.exists());
         InputStream effective = new FileInputStream(effectiveFile);
         assertTrue(IOUtils.contentEquals(effective, expected));
         effective.close();
         expected.close();
 
-        FileUtils.deleteDirectory(file);
+        FileUtils.deleteDirectory(tempDir);
     }
 
 }

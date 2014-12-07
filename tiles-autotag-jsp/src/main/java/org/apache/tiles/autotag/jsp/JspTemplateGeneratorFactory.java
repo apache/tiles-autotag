@@ -20,8 +20,7 @@
  */
 package org.apache.tiles.autotag.jsp;
 
-import java.io.File;
-
+import org.apache.tiles.autotag.core.OutputLocator;
 import org.apache.tiles.autotag.generate.TemplateGenerator;
 import org.apache.tiles.autotag.generate.TemplateGeneratorBuilder;
 import org.apache.tiles.autotag.generate.TemplateGeneratorFactory;
@@ -37,12 +36,12 @@ public class JspTemplateGeneratorFactory implements TemplateGeneratorFactory {
     /**
      * Location of the file.
      */
-    private File classesOutputDirectory;
+    private OutputLocator classesOutputLocator;
 
     /**
      * Location of the file.
      */
-    private File resourcesOutputDirectory;
+    private OutputLocator resourcesOutputLocator;
 
     /**
      * The Velocity engine.
@@ -57,16 +56,16 @@ public class JspTemplateGeneratorFactory implements TemplateGeneratorFactory {
     /**
      * Constructor.
      *
-     * @param classesOutputDirectory The directory where classes will be generated.
-     * @param resourcesOutputDirectory The directory where the TLD file will be generated.
+     * @param classesOutputLocator The directory where classes will be generated.
+     * @param resourcesOutputLocator The directory where the TLD file will be generated.
      * @param velocityEngine The Velocity engine.
      * @param templateGeneratorBuilder The template generator builder.
      */
-    public JspTemplateGeneratorFactory(File classesOutputDirectory,
-            File resourcesOutputDirectory, VelocityEngine velocityEngine,
+    public JspTemplateGeneratorFactory(OutputLocator classesOutputLocator,
+    		OutputLocator resourcesOutputLocator, VelocityEngine velocityEngine,
             TemplateGeneratorBuilder templateGeneratorBuilder) {
-        this.classesOutputDirectory = classesOutputDirectory;
-        this.resourcesOutputDirectory = resourcesOutputDirectory;
+        this.classesOutputLocator = classesOutputLocator;
+        this.resourcesOutputLocator = resourcesOutputLocator;
         this.velocityEngine = velocityEngine;
         this.templateGeneratorBuilder = templateGeneratorBuilder;
     }
@@ -74,8 +73,8 @@ public class JspTemplateGeneratorFactory implements TemplateGeneratorFactory {
     @Override
     public TemplateGenerator createTemplateGenerator() {
         return templateGeneratorBuilder
-                .setClassesOutputDirectory(classesOutputDirectory)
-                .setResourcesOutputDirectory(resourcesOutputDirectory)
+                .setClassesOutputLocator(classesOutputLocator)
+                .setResourcesOutputLocator(resourcesOutputLocator)
                 .addResourcesTemplateSuiteGenerator(
                         new TLDGenerator(velocityEngine))
                 .addClassesTemplateClassGenerator(

@@ -33,6 +33,8 @@ import java.util.Properties;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.tiles.autotag.core.DirectoryOutputLocator;
+import org.apache.tiles.autotag.core.OutputLocator;
 import org.apache.tiles.autotag.core.runtime.ModelBody;
 import org.apache.tiles.autotag.model.TemplateClass;
 import org.apache.tiles.autotag.model.TemplateMethod;
@@ -63,10 +65,9 @@ public class TagClassGeneratorTest {
         VelocityEngine velocityEngine = new VelocityEngine(props);
 
         TagClassGenerator generator = new TagClassGenerator(velocityEngine);
-        File file = File.createTempFile("autotag", null);
-        file.delete();
-        file.mkdir();
-        file.deleteOnExit();
+        File tempDir = new File(System.getProperty("java.io.tmpdir"), "autotag");
+        OutputLocator locator = new DirectoryOutputLocator(tempDir);
+        tempDir.deleteOnExit();
         TemplateSuite suite = new TemplateSuite("tldtest", "Test for TLD docs.");
         Map<String, String> parameters = new HashMap<String, String>();
         parameters.put("taglibURI", "http://www.initrode.net/tags/test");
@@ -93,11 +94,11 @@ public class TagClassGeneratorTest {
                 "doStuff", "DoStuff", executeMethod);
         clazz.setDocumentation("Documentation of the DoStuff class.");
 
-        generator.generate(file, "org.apache.tiles.autotag.jsp.test", suite, clazz, parameters,
+        generator.generate(locator, "org.apache.tiles.autotag.jsp.test", suite, clazz, parameters,
                            "org.apache.tiles.autotag.jsp.test.Runtime", REQUEST_CLASS);
 
         InputStream expected = getClass().getResourceAsStream("/org/apache/tiles/autotag/jsp/test/DoStuffTag.java");
-        File effectiveFile = new File(file, "/org/apache/tiles/autotag/jsp/test/DoStuffTag.java");
+        File effectiveFile = new File(tempDir, "/org/apache/tiles/autotag/jsp/test/DoStuffTag.java");
         assertTrue(effectiveFile.exists());
         InputStream effective = new FileInputStream(effectiveFile);
         assertTrue(IOUtils.contentEquals(effective, expected));
@@ -126,18 +127,18 @@ public class TagClassGeneratorTest {
 
         suite.addTemplateClass(clazz);
 
-        generator.generate(file, "org.apache.tiles.autotag.jsp.test", suite, clazz, parameters,
+        generator.generate(locator, "org.apache.tiles.autotag.jsp.test", suite, clazz, parameters,
                            "org.apache.tiles.autotag.jsp.test.Runtime", REQUEST_CLASS);
 
         expected = getClass().getResourceAsStream("/org/apache/tiles/autotag/jsp/test/DoStuffNoBodyTag.java");
-        effectiveFile = new File(file, "/org/apache/tiles/autotag/jsp/test/DoStuffNoBodyTag.java");
+        effectiveFile = new File(tempDir, "/org/apache/tiles/autotag/jsp/test/DoStuffNoBodyTag.java");
         assertTrue(effectiveFile.exists());
         effective = new FileInputStream(effectiveFile);
         assertTrue(IOUtils.contentEquals(effective, expected));
         effective.close();
         expected.close();
 
-        FileUtils.deleteDirectory(file);
+        FileUtils.deleteDirectory(tempDir);
     }
 
 }

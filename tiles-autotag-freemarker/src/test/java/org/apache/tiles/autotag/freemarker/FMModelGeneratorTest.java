@@ -31,6 +31,8 @@ import java.util.Properties;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.tiles.autotag.core.DirectoryOutputLocator;
+import org.apache.tiles.autotag.core.OutputLocator;
 import org.apache.tiles.autotag.core.runtime.ModelBody;
 import org.apache.tiles.autotag.model.TemplateClass;
 import org.apache.tiles.autotag.model.TemplateMethod;
@@ -61,10 +63,9 @@ public class FMModelGeneratorTest {
         VelocityEngine velocityEngine = new VelocityEngine(props);
 
         FMModelGenerator generator = new FMModelGenerator(velocityEngine);
-        File file = File.createTempFile("autotag", null);
-        file.delete();
-        file.mkdir();
-        file.deleteOnExit();
+        File tempDir = new File(System.getProperty("java.io.tmpdir"), "autotag");
+        OutputLocator locator = new DirectoryOutputLocator(tempDir);
+        tempDir.deleteOnExit();
         TemplateSuite suite = new TemplateSuite("tldtest", "Test for TLD docs.");
 
         List<TemplateParameter> params = new ArrayList<TemplateParameter>();
@@ -89,13 +90,13 @@ public class FMModelGeneratorTest {
                 "doStuff", "DoStuff", executeMethod);
         clazz.setDocumentation("Documentation of the DoStuff class.");
 
-        generator.generate(file, "org.apache.tiles.autotag.freemarker.test", suite, clazz, null,
+        generator.generate(locator, "org.apache.tiles.autotag.freemarker.test", suite, clazz, null,
                            "org.apache.tiles.autotag.freemarker.test.Runtime", REQUEST_CLASS);
 
         InputStream expected = getClass()
                 .getResourceAsStream(
                         "/org/apache/tiles/autotag/freemarker/test/DoStuffFMModel.javat");
-        File effectiveFile = new File(file, "/org/apache/tiles/autotag/freemarker/test/DoStuffFMModel.java");
+        File effectiveFile = new File(tempDir, "/org/apache/tiles/autotag/freemarker/test/DoStuffFMModel.java");
         assertTrue(effectiveFile.exists());
         InputStream effective = new FileInputStream(effectiveFile);
         assertTrue(IOUtils.contentEquals(effective, expected));
@@ -124,20 +125,20 @@ public class FMModelGeneratorTest {
 
         suite.addTemplateClass(clazz);
 
-        generator.generate(file, "org.apache.tiles.autotag.freemarker.test", suite, clazz, null,
+        generator.generate(locator, "org.apache.tiles.autotag.freemarker.test", suite, clazz, null,
                            "org.apache.tiles.autotag.freemarker.test.Runtime", REQUEST_CLASS);
 
         expected = getClass()
                 .getResourceAsStream(
                         "/org/apache/tiles/autotag/freemarker/test/DoStuffNoBodyFMModel.javat");
-        effectiveFile = new File(file, "/org/apache/tiles/autotag/freemarker/test/DoStuffNoBodyFMModel.java");
+        effectiveFile = new File(tempDir, "/org/apache/tiles/autotag/freemarker/test/DoStuffNoBodyFMModel.java");
         assertTrue(effectiveFile.exists());
         effective = new FileInputStream(effectiveFile);
         assertTrue(IOUtils.contentEquals(effective, expected));
         effective.close();
         expected.close();
 
-        FileUtils.deleteDirectory(file);
+        FileUtils.deleteDirectory(tempDir);
     }
 
 }

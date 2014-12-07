@@ -27,7 +27,9 @@ package org.apache.tiles.autotag.core;
  */
 public class AutotagRuntimeException extends RuntimeException {
 
-    /**
+	private static final long serialVersionUID = -7265964601637841559L;
+
+	/**
      * Constructor.
      */
     public AutotagRuntimeException() {

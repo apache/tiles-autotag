@@ -20,11 +20,14 @@
  */
 package org.apache.tiles.autotag.velocity;
 
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.*;
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.isA;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
+import static org.junit.Assert.assertSame;
 
-import java.io.File;
-
+import org.apache.tiles.autotag.core.OutputLocator;
 import org.apache.tiles.autotag.generate.TemplateGenerator;
 import org.apache.tiles.autotag.generate.TemplateGeneratorBuilder;
 import org.apache.velocity.app.VelocityEngine;
@@ -42,24 +45,24 @@ public class VelocityTemplateGeneratorFactoryTest {
      */
     @Test
     public void testCreateTemplateGenerator() {
-        File classesOutputDirectory = createMock(File.class);
-        File resourcesOutputDirectory = createMock(File.class);
+        OutputLocator classesOutputLocator = createMock(OutputLocator.class);
+        OutputLocator resourcesOutputLocator = createMock(OutputLocator.class);
         VelocityEngine velocityEngine = createMock(VelocityEngine.class);
         TemplateGeneratorBuilder builder = createMock(TemplateGeneratorBuilder.class);
         TemplateGenerator generator = createMock(TemplateGenerator.class);
 
-        expect(builder.setClassesOutputDirectory(classesOutputDirectory)).andReturn(builder);
-        expect(builder.setResourcesOutputDirectory(resourcesOutputDirectory)).andReturn(builder);
+        expect(builder.setClassesOutputLocator(classesOutputLocator)).andReturn(builder);
+        expect(builder.setResourcesOutputLocator(resourcesOutputLocator)).andReturn(builder);
         expect(builder.addResourcesTemplateSuiteGenerator(isA(VelocityPropertiesGenerator.class))).andReturn(builder);
         expect(builder.addClassesTemplateClassGenerator(isA(VelocityDirectiveGenerator.class))).andReturn(builder);
         expect(builder.build()).andReturn(generator);
 
-        replay(classesOutputDirectory, resourcesOutputDirectory, velocityEngine, builder, generator);
+        replay(classesOutputLocator, resourcesOutputLocator, velocityEngine, builder, generator);
         VelocityTemplateGeneratorFactory factory = new VelocityTemplateGeneratorFactory(
-                classesOutputDirectory, resourcesOutputDirectory,
+                classesOutputLocator, resourcesOutputLocator,
                 velocityEngine, builder);
         assertSame(generator, factory.createTemplateGenerator());
-        verify(classesOutputDirectory, resourcesOutputDirectory, velocityEngine, builder, generator);
+        verify(classesOutputLocator, resourcesOutputLocator, velocityEngine, builder, generator);
     }
 
 }

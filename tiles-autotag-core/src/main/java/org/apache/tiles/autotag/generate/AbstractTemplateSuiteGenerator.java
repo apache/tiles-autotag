@@ -21,12 +21,13 @@
 package org.apache.tiles.autotag.generate;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.Map;
 
 import org.apache.tiles.autotag.core.AutotagRuntimeException;
+import org.apache.tiles.autotag.core.OutputLocator;
 import org.apache.tiles.autotag.model.TemplateSuite;
 import org.apache.tiles.autotag.tool.StringTool;
 import org.apache.velocity.Template;
@@ -57,20 +58,20 @@ public abstract class AbstractTemplateSuiteGenerator implements TemplateSuiteGen
     }
 
     @Override
-    public void generate(File directory, String packageName, TemplateSuite suite, Map<String, String> parameters) {
-        File dir = new File(directory, getDirectoryName(directory, packageName, suite, parameters));
-        dir.mkdirs();
-        File file = new File(dir, getFilename(dir, packageName, suite, parameters));
+    public void generate(OutputLocator outputLocator, String packageName, TemplateSuite suite, Map<String, String> parameters) {
+        String filePath = 
+        		getDirectoryName(packageName, suite, parameters)
+                + File.separator
+                + getFilename(packageName, suite, parameters);
         VelocityContext context = new VelocityContext();
         context.put("packageName", packageName);
         context.put("suite", suite);
         context.put("stringTool", new StringTool());
         context.put("parameters", parameters);
         try {
-            file.createNewFile();
-            Template template = velocityEngine.getTemplate(getTemplatePath(dir,
+            Template template = velocityEngine.getTemplate(getTemplatePath(
                     packageName, suite, parameters));
-            Writer writer = new FileWriter(file);
+            Writer writer = new OutputStreamWriter(outputLocator.getOutputStream(filePath));
             try {
                 template.merge(context, writer);
             } finally {
@@ -95,38 +96,35 @@ public abstract class AbstractTemplateSuiteGenerator implements TemplateSuiteGen
     /**
      * Calculates and returns the template path.
      *
-     * @param directory The directory where the file will be written.
      * @param packageName The name of the package.
      * @param suite The template suite.
      * @param parameters The map of parameters.
      * @return The template path.
      */
-    protected abstract String getTemplatePath(File directory,
+    protected abstract String getTemplatePath(
             String packageName, TemplateSuite suite,
             Map<String, String> parameters);
 
     /**
      * Calculates and returns the filename of the generated file.
      *
-     * @param directory The directory where the file will be written.
      * @param packageName The name of the package.
      * @param suite The template suite.
      * @param parameters The map of parameters.
      * @return The template path.
      */
-    protected abstract String getFilename(File directory, String packageName,
+    protected abstract String getFilename(String packageName,
             TemplateSuite suite, Map<String, String> parameters);
 
     /**
      * Calculates and returns the directory where the file will be written..
      *
-     * @param directory The directory where the file will be written.
      * @param packageName The name of the package.
      * @param suite The template suite.
      * @param parameters The map of parameters.
      * @return The template path.
      */
-    protected abstract String getDirectoryName(File directory,
+    protected abstract String getDirectoryName(
             String packageName, TemplateSuite suite,
             Map<String, String> parameters);
 }

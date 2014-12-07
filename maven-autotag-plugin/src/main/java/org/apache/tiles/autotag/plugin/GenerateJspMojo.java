@@ -39,6 +39,10 @@ package org.apache.tiles.autotag.plugin;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.maven.plugins.annotations.LifecyclePhase;
+import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.Parameter;
+import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.apache.tiles.autotag.generate.TemplateGeneratorBuilder;
 import org.apache.tiles.autotag.generate.TemplateGeneratorFactory;
 import org.apache.tiles.autotag.jsp.JspTemplateGeneratorFactory;
@@ -47,26 +51,23 @@ import org.apache.velocity.app.VelocityEngine;
 
 /**
  * Goal which touches a timestamp file.
- *
- * @goal generate-jsp
- *
- * @phase generate-sources
- * @requiresDependencyResolution compile
  */
+@Mojo(
+	name = "generate-jsp", 
+	defaultPhase = LifecyclePhase.GENERATE_SOURCES,
+	requiresDependencyResolution = ResolutionScope.COMPILE)
 public class GenerateJspMojo extends AbstractGenerateMojo {
 
     /**
      * URI of the tag library.
-     *
-     * @parameter expression="http://www.example.com/tags/example"
      */
+	@Parameter(required = true)
     String taglibURI;
 
     /**
      * Name of the Runtime.
-     * @parameter expression="org.apache.tiles.autotag.jsp.runtime.Runtime"
-     * @required
      */
+	@Parameter(defaultValue = "org.apache.tiles.autotag.jsp.runtime.Runtime", required = true)
     String jspRuntime;
 
     /** {@inheritDoc} */
@@ -86,8 +87,8 @@ public class GenerateJspMojo extends AbstractGenerateMojo {
     @Override
     protected TemplateGeneratorFactory createTemplateGeneratorFactory(
             VelocityEngine velocityEngine) {
-        return new JspTemplateGeneratorFactory(classesOutputDirectory,
-                resourcesOutputDirectory, velocityEngine,
+        return new JspTemplateGeneratorFactory(classesOutputLocator,
+                resourcesOutputLocator, velocityEngine,
                 TemplateGeneratorBuilder.createNewInstance());
     }
 }

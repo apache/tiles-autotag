@@ -37,6 +37,7 @@ import org.apache.tiles.autotag.generate.TemplateGeneratorFactory;
 import org.apache.tiles.autotag.model.TemplateSuite;
 import org.apache.velocity.app.VelocityEngine;
 import org.junit.Test;
+import org.sonatype.plexus.build.incremental.BuildContext;
 
 /**
  * Tests {@link AbstractGenerateMojo}.
@@ -53,6 +54,7 @@ public class AbstractGenerateMojoTest {
     @Test
     public void testExecute() throws IOException, MojoExecutionException {
         MavenProject mavenProject = createMock(MavenProject.class);
+        BuildContext buildContext = createMock(BuildContext.class);
         TemplateGeneratorFactory factory = createMock(TemplateGeneratorFactory.class);
         TemplateGenerator generator = createMock(TemplateGenerator.class);
         @SuppressWarnings("unchecked")
@@ -74,7 +76,10 @@ public class AbstractGenerateMojoTest {
         mojo.packageName = "my.package";
         mojo.project = mavenProject;
         mojo.requestClass = "my.package.Request";
+        mojo.buildContext = buildContext;
 
+        buildContext.refresh(isA(File.class));
+        buildContext.refresh(isA(File.class));
         expect(mojo.createTemplateGeneratorFactory(isA(VelocityEngine.class))).andReturn(factory);
         expect(factory.createTemplateGenerator()).andReturn(generator);
         expect(mojo.getParameters()).andReturn(params);
@@ -85,10 +90,10 @@ public class AbstractGenerateMojoTest {
         mavenProject.addResource(isA(Resource.class));
         mavenProject.addCompileSourceRoot(classesOutputDirectory.getAbsolutePath());
 
-        replay(mavenProject, mojo, factory, generator, params);
+        replay(mavenProject, buildContext, mojo, factory, generator, params);
         mojo.execute();
         FileUtils.deleteDirectory(temp);
-        verify(mavenProject, mojo, factory, generator, params);
+        verify(mavenProject, buildContext, mojo, factory, generator, params);
     }
 
 }

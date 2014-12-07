@@ -20,7 +20,6 @@
  */
 package org.apache.tiles.autotag.jsp;
 
-import java.io.File;
 import java.util.Map;
 
 import org.apache.tiles.autotag.generate.AbstractTemplateSuiteGenerator;
@@ -44,19 +43,19 @@ public class TLDGenerator extends AbstractTemplateSuiteGenerator {
     }
 
     @Override
-    protected String getTemplatePath(File directory, String packageName,
+    protected String getTemplatePath(String packageName,
             TemplateSuite suite, Map<String, String> parameters) {
         return "/org/apache/tiles/autotag/jsp/tld.vm";
     }
 
     @Override
-    protected String getFilename(File directory, String packageName,
+    protected String getFilename(String packageName,
             TemplateSuite suite, Map<String, String> parameters) {
         return suite.getName() + "-jsp.tld";
     }
 
     @Override
-    protected String getDirectoryName(File directory, String packageName,
+    protected String getDirectoryName(String packageName,
             TemplateSuite suite, Map<String, String> parameters) {
         return "META-INF/tld/";
     }

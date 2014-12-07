@@ -22,6 +22,10 @@ package org.apache.tiles.autotag.plugin;
 
 import java.util.Map;
 
+import org.apache.maven.plugins.annotations.LifecyclePhase;
+import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.Parameter;
+import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.apache.tiles.autotag.freemarker.FMTemplateGeneratorFactory;
 import org.apache.tiles.autotag.generate.TemplateGeneratorBuilder;
 import org.apache.tiles.autotag.generate.TemplateGeneratorFactory;
@@ -29,19 +33,17 @@ import org.apache.velocity.app.VelocityEngine;
 
 /**
  * Generates Freemarker code.
- *
- * @goal generate-freemarker
- *
- * @phase generate-sources
- * @requiresDependencyResolution compile
  */
+@Mojo(
+	name = "generate-freemarker", 
+	defaultPhase = LifecyclePhase.GENERATE_SOURCES,
+	requiresDependencyResolution = ResolutionScope.COMPILE)
 public class GenerateFreemarkerMojo extends AbstractGenerateMojo {
 
     /**
      * Name of the Runtime.
-     * @parameter expression="org.apache.tiles.autotag.freemarker.runtime.Runtime"
-     * @required
      */
+	@Parameter(defaultValue = "org.apache.tiles.autotag.freemarker.runtime.Runtime", required = true)
     String freemarkerRuntime;
 
     /** {@inheritDoc} */
@@ -59,7 +61,7 @@ public class GenerateFreemarkerMojo extends AbstractGenerateMojo {
     @Override
     protected TemplateGeneratorFactory createTemplateGeneratorFactory(
             VelocityEngine velocityEngine) {
-        return new FMTemplateGeneratorFactory(classesOutputDirectory,
+        return new FMTemplateGeneratorFactory(classesOutputLocator,
                 velocityEngine, TemplateGeneratorBuilder.createNewInstance());
     }
 }

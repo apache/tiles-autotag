@@ -38,6 +38,10 @@ package org.apache.tiles.autotag.plugin;
 
 import java.util.Map;
 
+import org.apache.maven.plugins.annotations.LifecyclePhase;
+import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.Parameter;
+import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.apache.tiles.autotag.generate.TemplateGeneratorBuilder;
 import org.apache.tiles.autotag.generate.TemplateGeneratorFactory;
 import org.apache.tiles.autotag.velocity.VelocityTemplateGeneratorFactory;
@@ -46,19 +50,17 @@ import org.apache.velocity.app.VelocityEngine;
 
 /**
  * Generates Velocity code.
- *
- * @goal generate-velocity
- *
- * @phase generate-sources
- * @requiresDependencyResolution compile
  */
+@Mojo(
+	name = "generate-velocity",
+	defaultPhase = LifecyclePhase.GENERATE_SOURCES,
+	requiresDependencyResolution = ResolutionScope.COMPILE)
 public class GenerateVelocityMojo extends AbstractGenerateMojo {
 
     /**
      * Name of the Runtime.
-     * @parameter expression="org.apache.tiles.autotag.velocity.runtime.Runtime"
-     * @required
      */
+	@Parameter(defaultValue = "org.apache.tiles.autotag.velocity.runtime.Runtime", required = true)
     String velocityRuntime;
 
     /** {@inheritDoc} */
@@ -76,8 +78,8 @@ public class GenerateVelocityMojo extends AbstractGenerateMojo {
     @Override
     protected TemplateGeneratorFactory createTemplateGeneratorFactory(
             VelocityEngine velocityEngine) {
-        return new VelocityTemplateGeneratorFactory(classesOutputDirectory,
-                resourcesOutputDirectory, velocityEngine,
+        return new VelocityTemplateGeneratorFactory(classesOutputLocator,
+                resourcesOutputLocator, velocityEngine,
                 TemplateGeneratorBuilder.createNewInstance());
     }
 }

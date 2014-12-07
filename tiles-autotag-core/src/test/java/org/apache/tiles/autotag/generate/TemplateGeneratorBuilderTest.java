@@ -20,11 +20,13 @@
  */
 package org.apache.tiles.autotag.generate;
 
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.*;
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
-import java.io.File;
-
+import org.apache.tiles.autotag.core.OutputLocator;
 import org.junit.Test;
 
 /**
@@ -39,16 +41,16 @@ public class TemplateGeneratorBuilderTest {
      */
     @Test
     public void testAddClassesTemplateSuiteGenerator() {
-        File dir = createMock(File.class);
+        OutputLocator locator = createMock(OutputLocator.class);
         TemplateSuiteGenerator generator = createMock(TemplateSuiteGenerator.class);
 
-        replay(dir, generator);
+        replay(locator, generator);
         TemplateGenerator templateGenerator = TemplateGeneratorBuilder
-                .createNewInstance().setClassesOutputDirectory(dir)
+                .createNewInstance().setClassesOutputLocator(locator)
                 .addClassesTemplateSuiteGenerator(generator).build();
         assertTrue(templateGenerator.isGeneratingClasses());
         assertFalse(templateGenerator.isGeneratingResources());
-        verify(dir, generator);
+        verify(locator, generator);
     }
 
     /**
@@ -72,16 +74,16 @@ public class TemplateGeneratorBuilderTest {
      */
     @Test
     public void testAddClassesTemplateClassGenerator() {
-        File dir = createMock(File.class);
+        OutputLocator locator = createMock(OutputLocator.class);
         TemplateClassGenerator generator = createMock(TemplateClassGenerator.class);
 
-        replay(dir, generator);
+        replay(locator, generator);
         TemplateGenerator templateGenerator = TemplateGeneratorBuilder
-                .createNewInstance().setClassesOutputDirectory(dir)
+                .createNewInstance().setClassesOutputLocator(locator)
                 .addClassesTemplateClassGenerator(generator).build();
         assertTrue(templateGenerator.isGeneratingClasses());
         assertFalse(templateGenerator.isGeneratingResources());
-        verify(dir, generator);
+        verify(locator, generator);
     }
 
     /**
@@ -105,16 +107,16 @@ public class TemplateGeneratorBuilderTest {
      */
     @Test
     public void testAddResourcesTemplateSuiteGenerator() {
-        File dir = createMock(File.class);
+        OutputLocator locator = createMock(OutputLocator.class);
         TemplateSuiteGenerator generator = createMock(TemplateSuiteGenerator.class);
 
-        replay(dir, generator);
+        replay(locator, generator);
         TemplateGenerator templateGenerator = TemplateGeneratorBuilder
-                .createNewInstance().setResourcesOutputDirectory(dir)
+                .createNewInstance().setResourcesOutputLocator(locator)
                 .addResourcesTemplateSuiteGenerator(generator).build();
         assertFalse(templateGenerator.isGeneratingClasses());
         assertTrue(templateGenerator.isGeneratingResources());
-        verify(dir, generator);
+        verify(locator, generator);
     }
 
     /**
@@ -138,16 +140,16 @@ public class TemplateGeneratorBuilderTest {
      */
     @Test
     public void testAddResourcesTemplateClassGenerator() {
-        File dir = createMock(File.class);
+        OutputLocator locator = createMock(OutputLocator.class);
         TemplateClassGenerator generator = createMock(TemplateClassGenerator.class);
 
-        replay(dir, generator);
+        replay(locator, generator);
         TemplateGenerator templateGenerator = TemplateGeneratorBuilder
-                .createNewInstance().setResourcesOutputDirectory(dir)
+                .createNewInstance().setResourcesOutputLocator(locator)
                 .addResourcesTemplateClassGenerator(generator).build();
         assertFalse(templateGenerator.isGeneratingClasses());
         assertTrue(templateGenerator.isGeneratingResources());
-        verify(dir, generator);
+        verify(locator, generator);
     }
 
     /**

@@ -20,11 +20,14 @@
  */
 package org.apache.tiles.autotag.freemarker;
 
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.*;
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.isA;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
+import static org.junit.Assert.assertSame;
 
-import java.io.File;
-
+import org.apache.tiles.autotag.core.OutputLocator;
 import org.apache.tiles.autotag.generate.TemplateGenerator;
 import org.apache.tiles.autotag.generate.TemplateGeneratorBuilder;
 import org.apache.velocity.app.VelocityEngine;
@@ -42,21 +45,21 @@ public class FMTemplateGeneratorFactoryTest {
      */
     @Test
     public void testCreateTemplateGenerator() {
-        File classesOutputDirectory = createMock(File.class);
+        OutputLocator classesOutputLocator = createMock(OutputLocator.class);
         VelocityEngine velocityEngine = createMock(VelocityEngine.class);
         TemplateGeneratorBuilder builder = createMock(TemplateGeneratorBuilder.class);
         TemplateGenerator generator = createMock(TemplateGenerator.class);
 
-        expect(builder.setClassesOutputDirectory(classesOutputDirectory)).andReturn(builder);
+        expect(builder.setClassesOutputLocator(classesOutputLocator)).andReturn(builder);
         expect(builder.addClassesTemplateSuiteGenerator(isA(FMModelRepositoryGenerator.class))).andReturn(builder);
         expect(builder.addClassesTemplateClassGenerator(isA(FMModelGenerator.class))).andReturn(builder);
         expect(builder.build()).andReturn(generator);
 
-        replay(classesOutputDirectory, velocityEngine, builder, generator);
+        replay(classesOutputLocator, velocityEngine, builder, generator);
         FMTemplateGeneratorFactory factory = new FMTemplateGeneratorFactory(
-                classesOutputDirectory, velocityEngine, builder);
+        		classesOutputLocator, velocityEngine, builder);
         assertSame(generator, factory.createTemplateGenerator());
-        verify(classesOutputDirectory, velocityEngine, builder, generator);
+        verify(classesOutputLocator, velocityEngine, builder, generator);
     }
 
 }

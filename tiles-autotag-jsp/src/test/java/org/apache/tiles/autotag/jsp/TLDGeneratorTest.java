@@ -33,6 +33,8 @@ import java.util.Properties;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.tiles.autotag.core.DirectoryOutputLocator;
+import org.apache.tiles.autotag.core.OutputLocator;
 import org.apache.tiles.autotag.core.runtime.ModelBody;
 import org.apache.tiles.autotag.model.TemplateClass;
 import org.apache.tiles.autotag.model.TemplateMethod;
@@ -63,10 +65,9 @@ public class TLDGeneratorTest {
         VelocityEngine velocityEngine = new VelocityEngine(props);
 
         TLDGenerator generator = new TLDGenerator(velocityEngine);
-        File file = File.createTempFile("autotag", null);
-        file.delete();
-        file.mkdir();
-        file.deleteOnExit();
+        File tempDir = new File(System.getProperty("java.io.tmpdir"), "autotag");
+        OutputLocator locator = new DirectoryOutputLocator(tempDir);
+        tempDir.deleteOnExit();
         TemplateSuite suite = new TemplateSuite("tldtest", "Test for TLD docs.");
         Map<String, String> parameters = new HashMap<String, String>();
         parameters.put("taglibURI", "http://www.initrode.net/tags/test");
@@ -115,17 +116,17 @@ public class TLDGeneratorTest {
 
         suite.addTemplateClass(clazz);
 
-        generator.generate(file, "org.apache.tiles.autotag.jsp.test", suite, parameters);
+        generator.generate(locator, "org.apache.tiles.autotag.jsp.test", suite, parameters);
 
         InputStream expected = getClass().getResourceAsStream("/tldtest-jsp.tld");
-        File effectiveFile = new File(file, "META-INF/tld/tldtest-jsp.tld");
+        File effectiveFile = new File(tempDir, "META-INF/tld/tldtest-jsp.tld");
         assertTrue(effectiveFile.exists());
         InputStream effective = new FileInputStream(effectiveFile);
         assertTrue(IOUtils.contentEquals(effective, expected));
         effective.close();
         expected.close();
 
-        FileUtils.deleteDirectory(file);
+        FileUtils.deleteDirectory(tempDir);
     }
 
 }

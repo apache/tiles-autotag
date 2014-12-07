@@ -20,11 +20,20 @@
  */
 package org.apache.tiles.autotag.plugin;
 
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.*;
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.isA;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -44,7 +53,9 @@ import org.apache.tiles.autotag.plugin.internal.ExampleExecutableModel;
 import org.apache.tiles.autotag.plugin.internal.ExampleModel;
 import org.apache.tiles.autotag.plugin.internal.ExampleRequest;
 import org.apache.tiles.autotag.plugin.internal.NotFeasibleExampleModel;
+import org.codehaus.plexus.util.Scanner;
 import org.junit.Test;
+import org.sonatype.plexus.build.incremental.BuildContext;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.converters.reflection.Sun14ReflectionProvider;
@@ -64,9 +75,12 @@ public class CreateDescriptorMojoTest {
     @Test
     public void testExecute() throws IOException, MojoExecutionException {
         MavenProject mavenProject = createMock(MavenProject.class);
+        BuildContext buildContext = createMock(BuildContext.class);
+        Scanner scanner = createMock(Scanner.class);
 
         CreateDescriptorMojo mojo = new CreateDescriptorMojo();
         mojo.sourceDirectory = new File(System.getProperty("basedir"), "src/test/java");
+        String[] models = getModels(mojo.sourceDirectory);
         File temp = File.createTempFile("autotagmojo", ".tmp");
         temp.delete();
         temp.mkdirs();
@@ -75,10 +89,18 @@ public class CreateDescriptorMojoTest {
         mojo.documentation = "This are the docs";
         mojo.project = mavenProject;
         mojo.requestClass = ExampleRequest.class.getName();
+        mojo.buildContext = buildContext;
 
         mavenProject.addResource(isA(Resource.class));
-
-        replay(mavenProject);
+        expect(buildContext.newScanner(isA(File.class))).andReturn(scanner);
+        scanner.setIncludes(isA(String[].class));
+        scanner.scan();
+        expect(scanner.getIncludedFiles()).andReturn(models);
+        File file = new File(temp, "META-INF/template-suite.xml");
+        file.getParentFile().mkdirs();
+        expect(buildContext.newFileOutputStream(isA(File.class))).andReturn(new FileOutputStream(file));
+        buildContext.refresh(isA(File.class));
+        replay(mavenProject, buildContext, scanner);
         mojo.execute();
         InputStream sis = new FileInputStream(new File(temp, "META-INF/template-suite.xml"));
         XStream xstream = new XStream(new Sun14ReflectionProvider());
@@ -158,7 +180,22 @@ public class CreateDescriptorMojoTest {
 
         assertNull(suite.getTemplateClassByName(NotFeasibleExampleModel.class.getName()));
         FileUtils.deleteDirectory(temp);
-        verify(mavenProject);
+        verify(mavenProject, buildContext);
     }
+
+	private String[] getModels(File sourceDirectory) {
+		File modelDir = new File(sourceDirectory, "org/apache/tiles/autotag/plugin/internal/");
+        String[] models = modelDir.list(new FilenameFilter() {
+			
+			@Override
+			public boolean accept(File dir, String name) {
+				return name.endsWith("Model.java");
+			}
+		});
+        for(int i = 0; i<models.length; i++) {
+        	models[i] = "org/apache/tiles/autotag/plugin/internal/" + models[i];
+        }
+		return models;
+	}
 
 }

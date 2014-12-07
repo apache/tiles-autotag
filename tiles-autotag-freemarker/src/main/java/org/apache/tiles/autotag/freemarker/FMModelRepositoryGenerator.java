@@ -20,7 +20,6 @@
  */
 package org.apache.tiles.autotag.freemarker;
 
-import java.io.File;
 import java.util.Map;
 
 import org.apache.tiles.autotag.generate.AbstractTemplateSuiteGenerator;
@@ -44,20 +43,20 @@ public class FMModelRepositoryGenerator extends AbstractTemplateSuiteGenerator {
     }
 
     @Override
-    protected String getTemplatePath(File directory, String packageName,
+    protected String getTemplatePath(String packageName,
             TemplateSuite suite, Map<String, String> parameters) {
         return "/org/apache/tiles/autotag/freemarker/repository.vm";
     }
 
     @Override
-    protected String getFilename(File directory, String packageName,
+    protected String getFilename(String packageName,
             TemplateSuite suite, Map<String, String> parameters) {
         String name = suite.getName();
         return name.substring(0, 1).toUpperCase() + name.substring(1) + "FMModelRepository.java";
     }
 
     @Override
-    protected String getDirectoryName(File directory, String packageName,
+    protected String getDirectoryName(String packageName,
             TemplateSuite suite, Map<String, String> parameters) {
         return packageName.replaceAll("\\.", "/");
     }

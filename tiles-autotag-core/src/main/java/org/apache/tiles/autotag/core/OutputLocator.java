@@ -20,47 +20,17 @@
  */
 package org.apache.tiles.autotag.core;
 
+import java.io.IOException;
+import java.io.OutputStream;
+
 /**
- * Thrown if there is a problem when parsing a class source.
- *
- * @version $Rev$ $Date$
+ * Decouples the autotag generator from the actual location of the files.
  */
-public class ClassParseException extends AutotagRuntimeException {
-
-	private static final long serialVersionUID = -8579521283073016196L;
-
+public interface OutputLocator {
 	/**
-     * Constructor.
-     */
-    public ClassParseException() {
-    }
-
-    /**
-     * Constructor.
-     *
-     * @param message The message of the exception.
-     */
-    public ClassParseException(String message) {
-        super(message);
-    }
-
-    /**
-     * Constructor.
-     *
-     * @param cause The cause.
-     */
-    public ClassParseException(Throwable cause) {
-        super(cause);
-    }
-
-    /**
-     * Constructor.
-     *
-     * @param message The message of the exception.
-     * @param cause The cause.
-     */
-    public ClassParseException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
+	 * Returns a writer for the file at this path.
+	 * @param resourcePath the path of the file to write
+	 * @return a Writer for the file.
+	 */
+	OutputStream getOutputStream(String resourcePath) throws IOException;
 }
