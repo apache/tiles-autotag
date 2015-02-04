@@ -26,6 +26,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.net.URLConnection;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -100,15 +101,17 @@ public abstract class AbstractGenerateMojo extends AbstractMojo {
     public void execute() throws MojoExecutionException {
         try {
         	TemplateSuite suite;
-        	InputStream stream = findTemplateSuiteDescriptor();
+        	URLConnection templateSuite = findTemplateSuiteDescriptor();
+        	long lastModified = templateSuite.getLastModified();
+        	InputStream stream = templateSuite.getInputStream();
             try {
 	            XStream xstream = new XStream(new Sun14ReflectionProvider());
 	            suite = (TemplateSuite) xstream.fromXML(stream);
             } finally {
 	            stream.close();
             }
-            classesOutputLocator = new MavenOutputLocator(classesOutputDirectory);
-            resourcesOutputLocator = new MavenOutputLocator(resourcesOutputDirectory);
+            classesOutputLocator = new MavenOutputLocator(classesOutputDirectory, lastModified);
+            resourcesOutputLocator = new MavenOutputLocator(resourcesOutputDirectory, lastModified);
             Properties props = new Properties();
             InputStream propsStream = getClass().getResourceAsStream("/org/apache/tiles/autotag/velocity.properties");
             props.load(propsStream);
@@ -118,13 +121,11 @@ public abstract class AbstractGenerateMojo extends AbstractMojo {
             generator.generate(packageName, suite, getParameters(), getRuntimeClass(), requestClass);
             if (generator.isGeneratingResources()) {
             	buildContext.refresh(resourcesOutputDirectory);
-                Resource resource = new Resource();
-                resource.setDirectory(resourcesOutputDirectory.getAbsolutePath());
-                project.addResource(resource);
+                addResourceDirectory(resourcesOutputDirectory.getAbsolutePath());
             }
             if (generator.isGeneratingClasses()) {
             	buildContext.refresh(classesOutputDirectory);
-                project.addCompileSourceRoot(classesOutputDirectory.getAbsolutePath());
+                addCompileSourceRoot(classesOutputDirectory.getAbsolutePath());
             }
         } catch (IOException e) {
             throw new MojoExecutionException("error", e);
@@ -135,7 +136,38 @@ public abstract class AbstractGenerateMojo extends AbstractMojo {
         }
     }
 
-    /**
+	private void addResourceDirectory(String directory) {
+		boolean addResource = true;
+		@SuppressWarnings("unchecked")
+		List<Resource> resources = project.getResources();
+		for(Resource resource: resources) {
+			if(directory.equals(resource.getDirectory())) {
+				addResource = false;
+			}
+		}
+		if(addResource) {
+		    Resource resource = new Resource();
+		    resource.setDirectory(directory);
+		    project.addResource(resource);
+		}
+	}
+
+	private void addCompileSourceRoot(String directory) {
+		boolean addResource = true;
+		@SuppressWarnings("unchecked")
+		List<String> roots = project.getCompileSourceRoots();
+		for(String root: roots) {
+			if(directory.equals(root)) {
+				addResource = false;
+			}
+		}
+		if(addResource) {
+		    project.addCompileSourceRoot(directory);
+		}
+	}
+
+
+	/**
      * Creates a template generator factory.
      *
      * @param velocityEngine The Velocity engine.
@@ -156,7 +188,7 @@ public abstract class AbstractGenerateMojo extends AbstractMojo {
      * @return The inputstream of the identified descriptor.
      * @throws IOException If something goes wrong.
      */
-    private InputStream findTemplateSuiteDescriptor() throws IOException {
+    private URLConnection findTemplateSuiteDescriptor() throws IOException {
         URL[] urls = new URL[classpathElements.size()];
         int i = 0;
         for ( String classpathElement: classpathElements )
@@ -165,7 +197,7 @@ public abstract class AbstractGenerateMojo extends AbstractMojo {
         }
 
         ClassLoader cl = new URLClassLoader( urls );
-        return cl.getResourceAsStream(META_INF_TEMPLATE_SUITE_XML);
+        return cl.getResource(META_INF_TEMPLATE_SUITE_XML).openConnection();
     }
 
     /**
@@ -177,9 +209,11 @@ public abstract class AbstractGenerateMojo extends AbstractMojo {
     private final class MavenOutputLocator implements OutputLocator {
     	
     	private File outputDirectory;
+    	private long sourceLastModified;
     	
-    	private MavenOutputLocator(File outputDirectory) {
+    	private MavenOutputLocator(File outputDirectory, long sourceLastModified) {
     		this.outputDirectory = outputDirectory;
+    		this.sourceLastModified = sourceLastModified;
     	}
     	
 		@Override
@@ -188,6 +222,12 @@ public abstract class AbstractGenerateMojo extends AbstractMojo {
 			File target = new File(outputDirectory, resourcePath);
 			target.getParentFile().mkdirs();
 			return buildContext.newFileOutputStream(target);
+		}
+
+		@Override
+		public boolean isUptodate(String resourcePath) {
+			File target = new File(outputDirectory, resourcePath);
+			return target.exists() && target.lastModified() > sourceLastModified;
 		}
 	}
 }

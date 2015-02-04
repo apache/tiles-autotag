@@ -63,33 +63,35 @@ public abstract class AbstractTemplateSuiteGenerator implements TemplateSuiteGen
         		getDirectoryName(packageName, suite, parameters)
                 + File.separator
                 + getFilename(packageName, suite, parameters);
-        VelocityContext context = new VelocityContext();
-        context.put("packageName", packageName);
-        context.put("suite", suite);
-        context.put("stringTool", new StringTool());
-        context.put("parameters", parameters);
-        try {
-            Template template = velocityEngine.getTemplate(getTemplatePath(
-                    packageName, suite, parameters));
-            Writer writer = new OutputStreamWriter(outputLocator.getOutputStream(filePath));
-            try {
-                template.merge(context, writer);
-            } finally {
-                writer.close();
-            }
-        } catch (ResourceNotFoundException e) {
-            throw new AutotagRuntimeException("Cannot find template resource", e);
-        } catch (ParseErrorException e) {
-            throw new AutotagRuntimeException("The template resource is not parseable", e);
-        } catch (IOException e) {
-            throw new AutotagRuntimeException(
-                    "I/O Exception when generating file", e);
-        } catch (RuntimeException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new AutotagRuntimeException(
-                    "Another generic exception while parsing the template resource",
-                    e);
+		if (!outputLocator.isUptodate(filePath)) {
+	        VelocityContext context = new VelocityContext();
+	        context.put("packageName", packageName);
+	        context.put("suite", suite);
+	        context.put("stringTool", new StringTool());
+	        context.put("parameters", parameters);
+	        try {
+	            Template template = velocityEngine.getTemplate(getTemplatePath(
+	                    packageName, suite, parameters));
+	            Writer writer = new OutputStreamWriter(outputLocator.getOutputStream(filePath));
+	            try {
+	                template.merge(context, writer);
+	            } finally {
+	                writer.close();
+	            }
+	        } catch (ResourceNotFoundException e) {
+	            throw new AutotagRuntimeException("Cannot find template resource", e);
+	        } catch (ParseErrorException e) {
+	            throw new AutotagRuntimeException("The template resource is not parseable", e);
+	        } catch (IOException e) {
+	            throw new AutotagRuntimeException(
+	                    "I/O Exception when generating file", e);
+	        } catch (RuntimeException e) {
+	            throw e;
+	        } catch (Exception e) {
+	            throw new AutotagRuntimeException(
+	                    "Another generic exception while parsing the template resource",
+	                    e);
+	        }
         }
     }
 

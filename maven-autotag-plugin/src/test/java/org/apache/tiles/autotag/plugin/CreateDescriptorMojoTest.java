@@ -37,6 +37,7 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
@@ -91,6 +92,7 @@ public class CreateDescriptorMojoTest {
         mojo.requestClass = ExampleRequest.class.getName();
         mojo.buildContext = buildContext;
 
+        expect(mavenProject.getResources()).andReturn(Collections.emptyList());
         mavenProject.addResource(isA(Resource.class));
         expect(buildContext.newScanner(isA(File.class))).andReturn(scanner);
         scanner.setIncludes(isA(String[].class));
@@ -98,8 +100,8 @@ public class CreateDescriptorMojoTest {
         expect(scanner.getIncludedFiles()).andReturn(models);
         File file = new File(temp, "META-INF/template-suite.xml");
         file.getParentFile().mkdirs();
+        expect(buildContext.isUptodate(isA(File.class), isA(File.class))).andReturn(false).times(models.length);
         expect(buildContext.newFileOutputStream(isA(File.class))).andReturn(new FileOutputStream(file));
-        buildContext.refresh(isA(File.class));
         replay(mavenProject, buildContext, scanner);
         mojo.execute();
         InputStream sis = new FileInputStream(new File(temp, "META-INF/template-suite.xml"));

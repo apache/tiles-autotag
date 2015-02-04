@@ -31,9 +31,16 @@ import java.io.OutputStream;
 public class DirectoryOutputLocator implements OutputLocator {
 
 	private File directory;
+	private long sourceLastModified;
 
 	public DirectoryOutputLocator(File directory) {
 		this.directory = directory;
+		this.sourceLastModified = System.currentTimeMillis();
+	}
+
+	public DirectoryOutputLocator(File directory, long sourceLastModified) {
+		this.directory = directory;
+		this.sourceLastModified = sourceLastModified;
 	}
 
 	@Override
@@ -41,6 +48,12 @@ public class DirectoryOutputLocator implements OutputLocator {
 		File file = new File(directory, resourcePath);
 		file.getParentFile().mkdirs();
 		return new FileOutputStream(file);
+	}
+
+	@Override
+	public boolean isUptodate(String resourcePath) {
+		File file = new File(directory, resourcePath);
+		return file.exists() && file.lastModified() > sourceLastModified;
 	}
 
 }

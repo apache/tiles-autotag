@@ -33,4 +33,11 @@ public interface OutputLocator {
 	 * @return a Writer for the file.
 	 */
 	OutputStream getOutputStream(String resourcePath) throws IOException;
+	
+	/**
+	 * Checks if the output is up to date.
+	 * @param resourcePath the path of the file to write.
+	 * @return true if the output doesn't need to be generated again.
+	 */
+	boolean isUptodate(String resourcePath);
 }

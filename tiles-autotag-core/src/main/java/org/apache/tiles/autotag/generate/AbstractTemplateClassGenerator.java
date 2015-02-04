@@ -67,39 +67,41 @@ public abstract class AbstractTemplateClassGenerator implements
         		getDirectoryName(packageName, suite, clazz, parameters, runtimeClass, requestClass)
                 + File.separator
                 + getFilename(packageName, suite, clazz, parameters, runtimeClass, requestClass);
-        VelocityContext context = new VelocityContext();
-        context.put("packageName", packageName);
-        context.put("suite", suite);
-        context.put("clazz", clazz);
-        context.put("stringTool", new StringTool());
-        context.put("parameters", parameters);
-        context.put("runtimeClass", runtimeClass);
-        context.put("requestClass", requestClass);
-        try {
-            Template template = velocityEngine.getTemplate(getTemplatePath(
-                    packageName, suite, clazz, parameters, runtimeClass, requestClass));
-            Writer writer = new OutputStreamWriter(outputLocator.getOutputStream(filePath));
-            try {
-                template.merge(context, writer);
-            } finally {
-                writer.close();
-            }
-        } catch (ResourceNotFoundException e) {
-            throw new AutotagRuntimeException("Cannot find template resource",
-                    e);
-        } catch (ParseErrorException e) {
-            throw new AutotagRuntimeException(
-                    "The template resource is not parseable", e);
-        } catch (IOException e) {
-            throw new AutotagRuntimeException(
-                    "I/O Exception when generating file", e);
-        } catch (RuntimeException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new AutotagRuntimeException(
-                    "Another generic exception while parsing the template resource",
-                    e);
-        }
+		if (!outputLocator.isUptodate(filePath)) {
+	        VelocityContext context = new VelocityContext();
+	        context.put("packageName", packageName);
+	        context.put("suite", suite);
+	        context.put("clazz", clazz);
+	        context.put("stringTool", new StringTool());
+	        context.put("parameters", parameters);
+	        context.put("runtimeClass", runtimeClass);
+	        context.put("requestClass", requestClass);
+	        try {
+	            Template template = velocityEngine.getTemplate(getTemplatePath(
+	                    packageName, suite, clazz, parameters, runtimeClass, requestClass));
+	            Writer writer = new OutputStreamWriter(outputLocator.getOutputStream(filePath));
+	            try {
+	                template.merge(context, writer);
+	            } finally {
+	                writer.close();
+	            }
+	        } catch (ResourceNotFoundException e) {
+	            throw new AutotagRuntimeException("Cannot find template resource",
+	                    e);
+	        } catch (ParseErrorException e) {
+	            throw new AutotagRuntimeException(
+	                    "The template resource is not parseable", e);
+	        } catch (IOException e) {
+	            throw new AutotagRuntimeException(
+	                    "I/O Exception when generating file", e);
+	        } catch (RuntimeException e) {
+	            throw e;
+	        } catch (Exception e) {
+	            throw new AutotagRuntimeException(
+	                    "Another generic exception while parsing the template resource",
+	                    e);
+	        }
+		}
     }
 
     /**

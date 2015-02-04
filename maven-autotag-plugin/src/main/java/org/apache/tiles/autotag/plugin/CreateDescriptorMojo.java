@@ -42,6 +42,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.apache.maven.model.Resource;
@@ -116,31 +117,57 @@ public class CreateDescriptorMojo extends AbstractMojo {
     public void execute() throws MojoExecutionException {
         try {
             String[] fileNames = getSourceInclusionScanner().getIncludedFiles();
+            File dir = new File(outputDirectory, "META-INF");
+            if(!dir.exists()) {
+            	dir.mkdirs();
+            	buildContext.refresh(dir);
+            }
+            File outputFile = new File(dir, "template-suite.xml");
+            boolean uptodate = outputFile.exists();
             File[] files = new File[fileNames.length];
             for(int i=0; i<fileNames.length; i++) {
             	files[i] = new File(sourceDirectory, fileNames[i]);
+            	uptodate &= buildContext.isUptodate(outputFile, files[i]);
             }
-            QDoxTemplateSuiteFactory factory = new QDoxTemplateSuiteFactory(files);
-            factory.setSuiteName(name);
-            factory.setSuiteDocumentation(documentation);
-            factory.setRequestClass(requestClass);
-            TemplateSuite suite = factory.createTemplateSuite();
-            XStream xstream = new XStream();
-            File dir = new File(outputDirectory, "META-INF");
-            dir.mkdirs();
-            File outputFile = new File(dir, "template-suite.xml");
-            OutputStream os = buildContext.newFileOutputStream(outputFile);
-            Writer writer = new OutputStreamWriter(os);
-            xstream.toXML(suite, writer);
-            writer.close();
-            buildContext.refresh(outputDirectory);
-            Resource resource = new Resource();
-            resource.setDirectory(outputDirectory.getAbsolutePath());
-            project.addResource(resource);
+            if(!uptodate) {
+                createDescriptor(outputFile, files);
+			}
+            addResourceDirectory(outputDirectory.getAbsolutePath());
         } catch (IOException e) {
             throw new MojoExecutionException("error", e);
         }
     }
+
+	private void createDescriptor(File outputFile, File[] files)
+			throws IOException {
+		QDoxTemplateSuiteFactory factory = new QDoxTemplateSuiteFactory(files);
+		factory.setSuiteName(name);
+		factory.setSuiteDocumentation(documentation);
+		factory.setRequestClass(requestClass);
+		TemplateSuite suite = factory.createTemplateSuite();
+		XStream xstream = new XStream();
+		OutputStream os = buildContext.newFileOutputStream(outputFile);
+		Writer writer = new OutputStreamWriter(os);
+		xstream.toXML(suite, writer);
+		writer.close();
+		os.close();
+	}
+
+	private void addResourceDirectory(String directory) {
+		boolean addResource = true;
+		@SuppressWarnings("unchecked")
+		List<Resource> resources = project.getResources();
+		for(Resource resource: resources) {
+			if(directory.equals(resource.getDirectory())) {
+				addResource = false;
+			}
+		}
+		if(addResource) {
+		    Resource resource = new Resource();
+		    resource.setDirectory(directory);
+		    project.addResource(resource);
+		}
+	}
 
     /**
      * Creates a source inclusion scanner.

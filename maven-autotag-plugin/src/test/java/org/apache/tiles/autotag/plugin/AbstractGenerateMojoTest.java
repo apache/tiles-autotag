@@ -25,6 +25,7 @@ import static org.easymock.EasyMock.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -79,7 +80,7 @@ public class AbstractGenerateMojoTest {
         mojo.buildContext = buildContext;
 
         buildContext.refresh(isA(File.class));
-        buildContext.refresh(isA(File.class));
+        expectLastCall().times(2);
         expect(mojo.createTemplateGeneratorFactory(isA(VelocityEngine.class))).andReturn(factory);
         expect(factory.createTemplateGenerator()).andReturn(generator);
         expect(mojo.getParameters()).andReturn(params);
@@ -87,7 +88,9 @@ public class AbstractGenerateMojoTest {
         generator.generate(eq("my.package"), isA(TemplateSuite.class), eq(params), eq("my.package.Runtime"), eq("my.package.Request"));
         expect(generator.isGeneratingClasses()).andReturn(true);
         expect(generator.isGeneratingResources()).andReturn(true);
+        expect(mavenProject.getResources()).andReturn(Collections.emptyList());
         mavenProject.addResource(isA(Resource.class));
+        expect(mavenProject.getCompileSourceRoots()).andReturn(Collections.emptyList());
         mavenProject.addCompileSourceRoot(classesOutputDirectory.getAbsolutePath());
 
         replay(mavenProject, buildContext, mojo, factory, generator, params);
