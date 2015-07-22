@@ -23,6 +23,7 @@ package org.apache.tiles.autotag.core.runtime;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.util.regex.Pattern;
 
 import org.apache.tiles.autotag.core.runtime.util.NullWriter;
 
@@ -32,6 +33,9 @@ import org.apache.tiles.autotag.core.runtime.util.NullWriter;
  * @version $Rev$ $Date$
  */
 public abstract class AbstractModelBody implements ModelBody {
+
+    // precompiled the pattern to avoid compiling on every method call
+    private static final Pattern PATTERN = Pattern.compile("^\\s*|\\s*$");
 
     /**
      * The default writer to use.
@@ -62,7 +66,7 @@ public abstract class AbstractModelBody implements ModelBody {
         }
         String body = writer.toString();
         if (body != null) {
-            body = body.replaceAll("^\\s*|\\s*$", "");
+            body = PATTERN.matcher(body).replaceAll("");
             if (body.length() <= 0) {
                 body = null;
             }
