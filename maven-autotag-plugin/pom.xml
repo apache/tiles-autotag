@@ -24,11 +24,11 @@ under the License.
   <parent>
     <artifactId>tiles-autotag</artifactId>
     <groupId>org.apache.tiles</groupId>
-    <version>1.2-SNAPSHOT</version>
+    <version>1.2</version>
   </parent>
   <groupId>org.apache.tiles.autotag.plugin</groupId>
   <artifactId>maven-autotag-plugin</artifactId>
-  <version>1.2-SNAPSHOT</version>
+  <version>1.2</version>
   <packaging>maven-plugin</packaging>
   <name>maven-autotag-plugin Maven Mojo</name>
   <dependencies>
@@ -57,7 +57,7 @@ under the License.
     <dependency>
     	<groupId>org.apache.tiles</groupId>
     	<artifactId>tiles-autotag-core</artifactId>
-    	<version>1.2-SNAPSHOT</version>
+    	<version>1.2</version>
     </dependency>
     <dependency>
     	<groupId>com.thoughtworks.xstream</groupId>
@@ -67,7 +67,7 @@ under the License.
     <dependency>
     	<groupId>org.apache.tiles</groupId>
     	<artifactId>tiles-autotag-jsp</artifactId>
-    	<version>1.2-SNAPSHOT</version>
+    	<version>1.2</version>
     </dependency>
     <dependency>
     	<groupId>org.apache.maven</groupId>
@@ -92,12 +92,12 @@ under the License.
     <dependency>
     	<groupId>org.apache.tiles</groupId>
     	<artifactId>tiles-autotag-freemarker</artifactId>
-    	<version>1.2-SNAPSHOT</version>
+    	<version>1.2</version>
     </dependency>
     <dependency>
     	<groupId>org.apache.tiles</groupId>
     	<artifactId>tiles-autotag-velocity</artifactId>
-    	<version>1.2-SNAPSHOT</version>
+    	<version>1.2</version>
     </dependency>
     <dependency>
     	<groupId>org.easymock</groupId>
@@ -164,7 +164,7 @@ under the License.
   									</goals>
   								</pluginExecutionFilter>
   								<action>
-  									<ignore></ignore>
+  									<ignore />
   								</action>
   							</pluginExecution>
   						</pluginExecutions>
