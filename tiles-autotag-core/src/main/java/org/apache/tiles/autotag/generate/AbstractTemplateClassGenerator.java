@@ -63,7 +63,7 @@ public abstract class AbstractTemplateClassGenerator implements
     public void generate(OutputLocator outputLocator, String packageName,
             TemplateSuite suite, TemplateClass clazz, Map<String, String> parameters,
             String runtimeClass, String requestClass) {
-        String filePath = 
+        String filePath =
         		getDirectoryName(packageName, suite, clazz, parameters, runtimeClass, requestClass)
                 + File.separator
                 + getFilename(packageName, suite, clazz, parameters, runtimeClass, requestClass);
@@ -140,7 +140,7 @@ public abstract class AbstractTemplateClassGenerator implements
      * @return The template path.
      */
     protected abstract String getDirectoryName(
-            String packageName, TemplateSuite suite, TemplateClass clazz, Map<String, String> parameters, 
+            String packageName, TemplateSuite suite, TemplateClass clazz, Map<String, String> parameters,
             String runtimeClass, String requestClass);
-    
+
 }

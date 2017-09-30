@@ -112,7 +112,7 @@ public class CreateDescriptorMojo extends AbstractMojo {
 
 	@Component
     BuildContext buildContext;
-    
+
     /** {@inheritDoc} */
     public void execute() throws MojoExecutionException {
         try {

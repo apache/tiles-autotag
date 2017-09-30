@@ -53,7 +53,7 @@ import org.apache.velocity.app.VelocityEngine;
  * Goal which touches a timestamp file.
  */
 @Mojo(
-	name = "generate-jsp", 
+	name = "generate-jsp",
 	defaultPhase = LifecyclePhase.GENERATE_SOURCES,
 	requiresDependencyResolution = ResolutionScope.COMPILE)
 public class GenerateJspMojo extends AbstractGenerateMojo {

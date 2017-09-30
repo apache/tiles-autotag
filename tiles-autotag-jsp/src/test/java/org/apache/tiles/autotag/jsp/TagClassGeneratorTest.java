@@ -51,7 +51,7 @@ import org.junit.Test;
 public class TagClassGeneratorTest {
 
     public static final String REQUEST_CLASS = "org.apache.tiles.autotag.jsp.test.Request";
-    
+
     /**
      * Test method for {@link TagClassGenerator#generate(File, String, TemplateSuite, TemplateClass, Map)}.
      * @throws Exception If something goes wrong.

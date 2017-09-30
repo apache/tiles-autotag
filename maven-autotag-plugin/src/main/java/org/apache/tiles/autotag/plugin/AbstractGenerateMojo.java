@@ -93,7 +93,7 @@ public abstract class AbstractGenerateMojo extends AbstractMojo {
 
 	@Component
     BuildContext buildContext;
-    
+
 	OutputLocator classesOutputLocator;
 	OutputLocator resourcesOutputLocator;
 	

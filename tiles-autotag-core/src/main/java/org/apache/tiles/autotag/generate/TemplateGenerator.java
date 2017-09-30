@@ -41,7 +41,7 @@ public interface TemplateGenerator {
      * @param runtimeClass The RequestBuilder implementation.
      * @param requestClass The request class to use.
      */
-    void generate(String packageName, TemplateSuite suite, Map<String, String> parameters, 
+    void generate(String packageName, TemplateSuite suite, Map<String, String> parameters,
         String runtimeClass, String requestClass);
 
     /**

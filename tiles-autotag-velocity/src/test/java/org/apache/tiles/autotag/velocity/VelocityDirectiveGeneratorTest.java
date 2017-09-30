@@ -47,7 +47,7 @@ import org.junit.Test;
  * @version $Rev$ $Date$
  */
 public class VelocityDirectiveGeneratorTest {
-    
+
     public static final String REQUEST_CLASS = "org.apache.tiles.autotag.velocity.Request";
 
     /**

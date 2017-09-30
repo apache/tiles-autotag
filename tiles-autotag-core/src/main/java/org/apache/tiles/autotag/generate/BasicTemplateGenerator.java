@@ -76,7 +76,7 @@ class BasicTemplateGenerator implements TemplateGenerator {
 
 
     @Override
-    public void generate(String packageName, TemplateSuite suite, Map<String, String> parameters, 
+    public void generate(String packageName, TemplateSuite suite, Map<String, String> parameters,
         String runtimeClass, String requestClass) {
         for (TSGeneratorDirectoryPair pair : templateSuiteGenerators) {
             pair.getGenerator().generate(pair.getOutputLocator(), packageName, suite, parameters);

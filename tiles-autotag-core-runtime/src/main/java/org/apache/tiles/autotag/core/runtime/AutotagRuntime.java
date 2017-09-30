@@ -23,26 +23,26 @@ package org.apache.tiles.autotag.core.runtime;
 /**
  * Builder interface for creating requests.
  * The implementations are expected to provide a default constructor,
- * and to implement another interface that can be used to provide the 
+ * and to implement another interface that can be used to provide the
  * parameters needed to build the actual request object.
  */
 public interface AutotagRuntime<R> {
     /**
      * Creates a new Request instance.
-     * 
+     *
      * @return The Request.
      */
     R createRequest();
-    
+
     /**
      * Creates a new ModelBody instance to match the request.
-     * 
+     *
      * @return The ModelBody.
      */
     ModelBody createModelBody();
-    
+
     /**
-     * Extracts a parameter from the tag. 
+     * Extracts a parameter from the tag.
      * @param name The name of the parameter.
      * @param defaultValue The default value if none is specified.
      * @return The value of the parameter.

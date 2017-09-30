@@ -35,7 +35,7 @@ import org.apache.velocity.app.VelocityEngine;
  * Generates Freemarker code.
  */
 @Mojo(
-	name = "generate-freemarker", 
+	name = "generate-freemarker",
 	defaultPhase = LifecyclePhase.GENERATE_SOURCES,
 	requiresDependencyResolution = ResolutionScope.COMPILE)
 public class GenerateFreemarkerMojo extends AbstractGenerateMojo {

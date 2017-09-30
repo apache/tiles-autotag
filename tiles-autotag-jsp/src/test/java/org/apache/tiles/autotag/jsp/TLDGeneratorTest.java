@@ -49,7 +49,7 @@ import org.junit.Test;
  * @version $Rev$ $Date$
  */
 public class TLDGeneratorTest {
-    
+
     public static final String REQUEST_CLASS = "org.apache.tiles.autotag.jsp.test.Request";
 
     /**

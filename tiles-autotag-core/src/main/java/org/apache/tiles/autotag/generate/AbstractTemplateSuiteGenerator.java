@@ -59,7 +59,7 @@ public abstract class AbstractTemplateSuiteGenerator implements TemplateSuiteGen
 
     @Override
     public void generate(OutputLocator outputLocator, String packageName, TemplateSuite suite, Map<String, String> parameters) {
-        String filePath = 
+        String filePath =
         		getDirectoryName(packageName, suite, parameters)
                 + File.separator
                 + getFilename(packageName, suite, parameters);

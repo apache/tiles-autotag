@@ -49,7 +49,7 @@ import org.junit.Test;
 public class FMModelGeneratorTest {
 
     public static final String REQUEST_CLASS = "org.apache.tiles.autotag.freemarker.test.Request";
-    
+
     /**
      * Test method for {@link TagClassGenerator#generate(File, String, TemplateSuite, TemplateClass, java.util.Map)}.
      * @throws Exception If something goes wrong.
