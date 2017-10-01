@@ -31,6 +31,10 @@ under the License.
   <version>1.3-SNAPSHOT</version>
   <name>Autotag - Freemarker support</name>
   <description>Generates code for Freemarker support.</description>
+  <properties>
+        <!-- decrease this whenever possible -->
+        <checkstyle.maxAllowedViolations>2</checkstyle.maxAllowedViolations>
+  </properties>
   <dependencies>
   	<dependency>
   		<groupId>org.apache.tiles</groupId>

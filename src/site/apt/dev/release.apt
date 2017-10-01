@@ -102,14 +102,6 @@ mvn release:perform
 
   It should compile and test everything, build and upload the artifacts and the website for the project.
 
-  <<Troubleshooting>>: if upload of assemblies fails it can be done manually with
-
------------------------------------
-cd target/checkout/assembly/target/assemblies/
-ssh user@people.apache.org mkdir /www/people.apache.org/builds/tiles/autotag/${version}/
-scp * user@people.apache.org:/www/people.apache.org/builds/tiles/autotag/${version}/
------------------------------------
-
   Upload the assemblies manually with
 
 -----------------------------------

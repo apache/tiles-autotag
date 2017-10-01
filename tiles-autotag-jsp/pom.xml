@@ -31,6 +31,10 @@ under the License.
   <version>1.3-SNAPSHOT</version>
   <name>Tiles Autotag - JSP tags automatic generation</name>
   <description>Generates JSP tags automatically from templates.</description>
+  <properties>
+        <!-- decrease this whenever possible -->
+        <checkstyle.maxAllowedViolations>1</checkstyle.maxAllowedViolations>
+  </properties>
   <dependencies>
     <dependency>
         <groupId>junit</groupId>

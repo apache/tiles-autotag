@@ -46,6 +46,10 @@ under the License.
 			</testResource>
 		</testResources>
 	</build>
+    <properties>
+        <!-- decrease this whenever possible -->
+        <checkstyle.maxAllowedViolations>35</checkstyle.maxAllowedViolations>
+    </properties>
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>

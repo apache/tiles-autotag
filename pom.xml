@@ -24,9 +24,21 @@ under the License.
     <parent>
         <artifactId>tiles-master</artifactId>
         <groupId>org.apache.tiles</groupId>
-        <version>7</version>
-        <relativePath />
+        <version>8-SNAPSHOT</version>
     </parent>
+
+    <!-- temporary only while parent pom is snapshot -->
+  <repositories>
+    <repository>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+      <id>apache.snapshots</id>
+      <name>Apache Snapshot Repository</name>
+      <url>https://repository.apache.org/snapshots</url>
+    </repository>
+  </repositories>
+
     <groupId>org.apache.tiles</groupId>
     <artifactId>tiles-autotag</artifactId>
     <version>1.3-SNAPSHOT</version>
