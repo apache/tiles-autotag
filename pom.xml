@@ -24,7 +24,7 @@ under the License.
     <parent>
         <artifactId>tiles-master</artifactId>
         <groupId>org.apache.tiles</groupId>
-        <version>8-SNAPSHOT</version>
+        <version>7</version>
     </parent>
 
     <!-- temporary only while parent pom is snapshot -->
@@ -125,6 +125,11 @@ under the License.
             </plugin>
         </plugins>
     </build>
+
+    <properties>
+        <maven.javadoc.failOnError>false</maven.javadoc.failOnError> <!-- remove with master-8 -->
+    </properties>
+
     <profiles>
         <profile>
             <id>apache-release</id>

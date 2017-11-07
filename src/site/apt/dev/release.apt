@@ -37,11 +37,11 @@ Prerequisites
 
   To create a release you have to install:
 
-  * {{{http://www.oracle.com/technetwork/java/javase/overview/index.html}Java 7}}. If you are using a newer
+  * {{{http://www.oracle.com/technetwork/java/javase/overview/index.html}Java 9}}. If you are using a newer
   version of Java <<change JAVA_HOME environment variable>>
-  when calling Maven, so it points to an instance of Java 7;
+  when calling Maven, so it points to an instance of Java 9;
 
-  * {{{http://maven.apache.org/}Maven 3.0.5+}};
+  * {{{http://maven.apache.org/}Maven 3.2.2+}};
 
   * {{{http://www.gnupg.org/}GnuPG}};
 
@@ -108,7 +108,7 @@ mvn release:perform
 cd target/
 svn co https://dist.apache.org/repos/dist/dev/tiles tiles-dist-dev
 mkdir tiles-dist-dev/autotag/${version}
-cp checkout/assembly/target/assemblies/* tiles-dist-dev/autotag/${version}/
+cp checkout/assembly/target/assembly/* tiles-dist-dev/autotag/${version}/
 svn add tiles-dist-dev/autotag/${version}
 svn ci tiles-dist-dev/autotag/${version}
 -----------------------------------
@@ -284,7 +284,7 @@ It is also available in the central Maven repository under Group ID
 The 1.x series of the Apache Tiles Autotag framework has a minimum
 requirement of the following specification versions:
 
-* Java Standard Edition (Java SE) 1.7
+* Java Standard Edition (Java SE) 1.8
 
 The release notes are available online at:
 
