@@ -36,6 +36,7 @@ import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -82,9 +83,7 @@ public class CreateDescriptorMojoTest {
         CreateDescriptorMojo mojo = new CreateDescriptorMojo();
         mojo.sourceDirectory = new File(System.getProperty("basedir"), "src/test/java");
         String[] models = getModels(mojo.sourceDirectory);
-        File temp = File.createTempFile("autotagmojo", ".tmp");
-        temp.delete();
-        temp.mkdirs();
+        File temp = Files.createTempDirectory("autotagmojo" + ".tmp").toFile();
         mojo.outputDirectory = temp;
         mojo.name = "test";
         mojo.documentation = "This are the docs";
