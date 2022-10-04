@@ -24,6 +24,7 @@ import static org.easymock.EasyMock.*;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -65,9 +66,7 @@ public class AbstractGenerateMojoTest {
         File source = new File(System.getProperty("basedir"), "src/test/resources");
         classpathElements.add(source.getAbsolutePath());
         mojo.classpathElements = classpathElements;
-        File temp = File.createTempFile("autotagmojogen", ".tmp");
-        temp.delete();
-        temp.mkdirs();
+        File temp = Files.createTempDirectory("autotagmojogen" + ".tmp").toFile();
         File resourcesOutputDirectory = new File(temp, "res/");
         File classesOutputDirectory = new File(temp, "classes/");
         resourcesOutputDirectory.mkdir();
